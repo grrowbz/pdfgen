@@ -1,3 +1,5 @@
+*.py[cod]
+
 /tmp/*
 /app/haru/*
 .python-version
