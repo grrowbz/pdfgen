@@ -1,5 +1,4 @@
-./tmp/
-./tmp/*
-./app/haru/
+/tmp/*
+/app/haru/*
 .python-version
 !.gitkeep
