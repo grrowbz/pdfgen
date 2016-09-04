@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- vim:set ts=4 fenc=utf-8: -->
+<content name="見積書テンプレート">
+	<doc page_size="HPDF_PAGE_SIZE_A4" landscape="HPDF_PAGE_PORTRAIT" language="JP">
+		<draw type="rectangle" position_x="25" position_y="27" width="545" height="25" fill="484848">
+			<text	font="font/GenShinGothic-P-Heavy.ttf" size="16" 
+					color="ffffff" align="center" position_x="0" position_y="47">
+				御　請　求　書
+			</text>
+		</draw>
+		<textarea 	ont="font/GenShinGothic-P-Regular.ttf" size="9.5" color="454545"
+					 position_x="435" position_y="65">
+	 		<text>test </text>
+		</textarea>
+
+		<!--
+		<draw type="rectangle" position_x="25" position_y="27" width="545" height="25" color="484848" >
+			<text> test </text>
+		</draw>
+		-->
+	</doc>
+</content>
