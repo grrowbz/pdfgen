@@ -32,7 +32,6 @@ if [ -e ./tmp ]; then
 	## libharuのライブラリをプロジェクトに配置
 	cp -rf ./if/python/* ${app}/haru
 
-
 	## libharuのファイルにパッチを当てる
 	if [ ! -f "${module_dir}/${project_file}.orig" ]; then
 		ret=${app}/haru/${project_file}
@@ -44,7 +43,9 @@ fi
 if [ `hash pyenv 2>/dev/null` ]; then
 	git clone https://github.com/yyuu/pyenv.git ~/.pyenv
 	git clone git://github.com/yyuu/pyenv-virtualenv.git ~/.pyenv/plugins/pyenv-virtualenv
+fi
 
+if [ -n ${PYENV_ROOT} ]; then 
 	echo 'export PYENV_ROOT="${HOME}/.pyenv"' >> ~/.bash_profile
 	echo 'if [ -n ${PYENV_ROOT} ]; then' >> ~/.bash_profile
 	echo '	path=(${PYENV_ROOT}/bin ${PYENV_ROOT}/shims ${path})' >> ~/.bash_profile
@@ -52,5 +53,4 @@ if [ `hash pyenv 2>/dev/null` ]; then
 	echo 'eval "$(pyenv init -)"' >> ~/.bash_profile
 	echo 'eval "$(pyenv virtualenv-init -)"' >> ~/.bash_profile
 fi
-
 
