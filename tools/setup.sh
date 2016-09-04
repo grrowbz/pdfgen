@@ -45,12 +45,18 @@ if [ `hash pyenv 2>/dev/null` ]; then
 	git clone git://github.com/yyuu/pyenv-virtualenv.git ~/.pyenv/plugins/pyenv-virtualenv
 fi
 
-if [ -n ${PYENV_ROOT} ]; then 
-	echo 'export PYENV_ROOT="${HOME}/.pyenv"' >> ~/.bash_profile
-	echo 'if [ -n ${PYENV_ROOT} ]; then' >> ~/.bash_profile
-	echo '	path=(${PYENV_ROOT}/bin ${PYENV_ROOT}/shims ${path})' >> ~/.bash_profile
-	echo 'fi' >> ~/.bash_profile
-	echo 'eval "$(pyenv init -)"' >> ~/.bash_profile
-	echo 'eval "$(pyenv virtualenv-init -)"' >> ~/.bash_profile
+if [ -d ~/.pyenv/bin/ ]; then
+	if [ ! -f ~/.pyenv/bin/pyenv_init.sh ]; then
+		echo "pyenv_init.shファイルの配置"
+
+		echo 'export PYENV_ROOT="${HOME}/.pyenv"' >> ~/.pyenv/bin/pyenv_init.sh
+		echo 'if [ -n ${PYENV_ROOT} ]; then' >> ~/.pyenv/bin/pyenv_init.sh
+		echo '    export PATH="${PYENV_ROOT}/bin:${PYENV_ROOT}/shims:$PATH"' >> ~/.pyenv/bin/pyenv_init.sh
+		echo '    eval "$(pyenv init -)"' >> ~/.pyenv/bin/pyenv_init.sh
+		echo '    eval "$(pyenv virtualenv-init -)"' >> ~/.pyenv/bin/pyenv_init.sh
+		echo 'fi' >> ~/.pyenv/bin/pyenv_init.sh
+	fi
 fi
 
+sed -i -e "s/\. ~\/\.pyenv\/bin\/pyenv_init\.sh//g" ~/.bash_profile && sed -i '$d' ~/.bash_profile
+echo ". ~/.pyenv/bin/pyenv_init.sh" >> ~/.bash_profile
