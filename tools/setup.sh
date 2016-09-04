@@ -40,7 +40,8 @@ if [ -e ./tmp ]; then
 	## libharuのファイルにパッチを当てる
 	if [ ! -f "${module_dir}/${project_file}.orig" ]; then
 		ret=${app}/haru/${project_file}
-		sed -i".orig" -e "s/libhpdf\.so/haru\/lib\/libhpdf\.so/" ${ret}
+		realpathcmd='os.path.dirname(os.path.realpath(__file__))+'
+		sed -i".orig" -e "s/'libhpdf\.so'/${realpathcmd}'\/lib\/libhpdf\.so'/" ${ret}
 	fi
 fi
 
