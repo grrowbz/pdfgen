@@ -17,7 +17,7 @@ def main():
 
 	draw		= HaruDraw(haru)
 	text		= HaruText(haru)
-	font_dir	= "../font/"
+	font_dir	= os.path.dirname(os.path.realpath(__file__)) + "/../font/"
 
 	## Header draw
 	draw.rect_with_fill(25, 27, 545, 25, [0.28, 0.28, 0.28])
