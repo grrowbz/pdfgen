@@ -6,11 +6,11 @@
 #
 
 import os, sys
-from basic_form import * 
+from basic_form import *
 from ctypes import *
 from libharu import *
 
-class EstimateForm(BasicForm):
+class PurchaseOrderForm(BasicForm):
 
     def __init__(self, haru):
 
@@ -18,19 +18,17 @@ class EstimateForm(BasicForm):
 
         ## Header 
         self.text.open_font(self.font["Heavy"]).set_style(16,[1,1,1])
-        self.text.put(u'御　見　積　書').write_with_align("center", self.haru.getX(), 0, 47).flush()
+        self.text.put(u'発　注　書').write_with_align("center", self.haru.getX(), 0, 47).flush()
 
         ## invoice meta information
         self.setFont("Regular",9.5,[0.25,0.25,0.25])
-        self.text.put(u'見積No：').write(self.haru.getX() - 160, 65).flush()
+        self.text.put(u'注文No：').write(self.haru.getX() - 160, 65).flush()
 
         ## greeting message field
-        MESSAGE1	= u'下記の通りお見積り致しますので、'
-        MESSAGE2	= u'よろしくお願い申し上げます。'
+        MESSAGE1	= u'下記の通り発注致します。'
 
         self.text.set_style(10.5,[0.2,0.2,0.2])
         self.text.put(MESSAGE1).write(29, 145).flush()
-        self.text.put(MESSAGE2).write(29, 158).flush()
 
         ## invoice infomation
         self.setFont("Regular", 9,[0.25,0.25,0.25])
@@ -40,15 +38,14 @@ class EstimateForm(BasicForm):
 
         self.text.put(u'納 入 期 限 　 ：').write(25, 199).flush()
         self.text.put(u'納 入 方 式 　 ：').write(25, 217).flush()
-        self.text.put(u'御 支 払 条 件 ：').write(25, 235).flush()
+        self.text.put(u'支 払 条 件 　 ：').write(25, 235).flush()
 
         self.setCompanyInfo()
-        self.setSignBox()
 
     ### invoice meta infomation set methods 
     def setProjectNumber(cls, number):
         cls.text.open_font(cls.font["Regular"]).set_style(9.5,[0.25,0.25,0.25])
-        cls.text.put("PR" + number).write(cls.haru.getX() - 115, 65).flush()
+        cls.text.put("PRORD" + number).write(cls.haru.getX() - 115, 65).flush()
 
     ## invoice infomation set method
     def setDeliveryDeadline(cls, date):
@@ -64,17 +61,18 @@ class EstimateForm(BasicForm):
         cls.text.put(terms).write(25 + 65, 234).flush()
 
     def setPrice(cls, price):
-        super(cls.__class__, cls).setPrice(u'お見積金額（税込）', price)
+        super(cls.__class__, cls).setPrice(u'発注金額（税込）', price)
 
     def createObject(cls):
         return cls.haru
 
 if __name__ == '__main__':
 
-    haru	= LibHaru()
-    form	= EstimateForm(haru)
+	haru	= LibHaru()
+	form	= PurchaseOrderForm(haru)
 
-    for x in dir(form):
-        print x
+	for x in dir(form):
+		print x
+	
+	haru.close()
 
-    haru.close()

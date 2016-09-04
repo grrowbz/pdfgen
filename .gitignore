@@ -1,2 +1,7 @@
-./tmp/
+*.py[cod]
+
+/tmp/*
+/app/haru/*
+.python-version
+.swp
 !.gitkeep
