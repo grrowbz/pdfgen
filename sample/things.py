@@ -23,17 +23,18 @@ class PdfGenerator(object):
     def on_post(cls, req, resp):
         print(req.headers)
         print(req.cookies)
-        print(req.stream.read().decode('utf-8'))
+        #print(req.stream.read().decode('utf-8'))
+        print(req.content_length)
         resp.status = falcon.HTTP_200
         resp.body = req.stream.read().decode('utf-8')
 
 app = falcon.API()
-falcon.RequestOptions = True
+falcon.RequestOptions.auto_parse_form_urlencoded = True
 app.add_route("/", HelloResource())
 app.add_route("/pdfgen", PdfGenerator())
 
 if __name__ == "__main__":
     from wsgiref import simple_server
-    httpd = simple_server.make_server("192.168.1.5", 8000, app)
+    httpd = simple_server.make_server("192.168.33.13", 8000, app)
     httpd.serve_forever()
 
