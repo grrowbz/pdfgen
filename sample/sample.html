@@ -1,10 +1,43 @@
 <html>
+<!-- vim: set ts=4 ts=4: -->
+<head>
+<meta charset="UTF-8">
+<title>HTMLファイルからPOSTでJSONデータを送信する</title>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
+
+<script type="text/javascript">
+$(function(){
+
+	$("#button").click( function(){
+		var JSONdata = {
+			title: $("#title").val(),
+			date: $("#date").val()
+		}; 
+
+		$.ajax({
+			type : 'post',
+			url : '/pdfgen',
+			//data : JSON.stringify(JSONdata),
+			data : JSONdata,
+			contentType: 'application/JSON',
+			dataType : 'JSON',
+			scriptCharset: 'utf-8',
+			success : function(data) {
+				$("#response").html(JSON.stringify(data));
+			},
+			error : function(data) { 
+				$("#response").html(JSON.stringify(data));
+			}
+		});
+	})
+})
+</script>
+</head>
 <body>
 	
-<form method="post" action="/pdfgen">
-	タイトル：<input name="hoge" type="text" value="システム開発サンプル" /><br>
-	日付：<input name="salu" type="text" value="某月某日" /><br>
-	<input type="submit" value="PDF生成!" />
-</form>
+<p>タイトル：<input name="title" type="text" value="システム開発サンプル" /></p>
+<p>日付：<input name="date" type="text" value="某月某日" /></p>
+<p><button id="button" type="button">PDF生成!</button></p>
+<textarea id="response" cols=120 rows=10 disabled></textarea>
 </body>
 </html>
