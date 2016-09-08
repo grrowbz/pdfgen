@@ -49,16 +49,16 @@ class PostTest(object):
 
 ## PDF link open test ##
 ## libharuにてデータストリームを開くテスト用メソッド
-class pdf_row_link_open_test(object):
+class pdf_stream_link_open_test(object):
 
     def on_get(cls, req, resp):
+        haru    = LibHaru()
+        haru.open().page_setsize(HPDF_PAGE_SIZE_A4, HPDF_PAGE_PORTRAIT).mbEnable('JP')
         print(req.headers)
-        print(req.cookies)
-        f = open(os.path.join(path, "../assets/demo.pdf"), 'r')
         resp.status = falcon.HTTP_200
         resp.content_type = "application/pdf"
-        resp.stream = f.read()
-        f.close()
+        haru.save(resp.stream)
+        haru.close()
 
 ## PDF link open test ##
 ## PDFファイルを普通に開くやつ
@@ -66,11 +66,10 @@ class pdf_row_link_open_test(object):
 
     def on_get(cls, req, resp):
         print(req.headers)
-        print(req.cookies)
         f = open(os.path.join(path, "../assets/demo.pdf"), 'r')
-        resp.status = falcon.HTTP_200
         resp.content_type = "application/pdf"
-        resp.stream = f.read()
+        resp.status = falcon.HTTP_200
+        resp.body = f.read()
         f.close()
 
 app = falcon.API()
@@ -83,6 +82,6 @@ app.add_route("/stream_link_open", pdf_stream_link_open_test())
 if __name__ == "__main__":
 
     from wsgiref import simple_server
-    httpd = simple_server.make_server("192.168.1.5", 8000, app)
+    httpd = simple_server.make_server("192.168.33.13", 8000, app)
     httpd.serve_forever()
 
