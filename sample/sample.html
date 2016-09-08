@@ -17,8 +17,7 @@ $(function(){
 		$.ajax({
 			type : 'post',
 			url : '/pdfgen',
-			//data : JSON.stringify(JSONdata),
-			data : JSONdata,
+			data : JSON.stringify(JSONdata),
 			contentType: 'application/JSON',
 			dataType : 'JSON',
 			scriptCharset: 'utf-8',
@@ -29,15 +28,30 @@ $(function(){
 				$("#response").html(JSON.stringify(data));
 			}
 		});
-	})
-})
+	});
+
+	$("#pdfget").click( function(){
+		var JSONdata = {
+			title: $("#title").val(),
+			date: $("#date").val()
+		}; 
+		$.get("/pdftest", JSON.stringify(JSONdata), function(data) { console.log(data); });		
+	});
+});
 </script>
 </head>
 <body>
 	
-<p>タイトル：<input name="title" type="text" value="システム開発サンプル" /></p>
-<p>日付：<input name="date" type="text" value="某月某日" /></p>
+<p>タイトル：<input id="title" name="title" type="text" value="システム開発サンプル" /></p>
+<p>日付：<input id="date" name="date" type="text" value="某月某日" /></p>
 <p><button id="button" type="button">PDF生成!</button></p>
+<p><button id="pdfget" type="button">PDF取得!</button></p>
 <textarea id="response" cols=120 rows=10 disabled></textarea>
+
+<!-- pdfのリンクをオープン -->
+<p><a href="/row_link_open" target="_blank" id="pdftest">pdfを普通に開く</a></p>
+
+<p><a href="/pdftest" target="_blank" id="pdftest">pdfを普通に開く</a></p>
+
 </body>
 </html>
