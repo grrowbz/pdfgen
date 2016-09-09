@@ -82,6 +82,6 @@ app.add_route("/stream_link_open", pdf_stream_link_open_test())
 if __name__ == "__main__":
 
     from wsgiref import simple_server
-    httpd = simple_server.make_server("192.168.33.13", 8000, app)
+    httpd = simple_server.make_server("192.168.1.5", 8000, app)
     httpd.serve_forever()
 
