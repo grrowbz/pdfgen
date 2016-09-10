@@ -4,7 +4,7 @@
 #
 
 import falcon
-import os, sys
+import os, sys, io
 from ctypes import *
 
 path = os.path.dirname(__file__)
@@ -26,7 +26,7 @@ def error_handler (error_no, detail_no, user_data):
 ## libharuにてデータストリームを開くテスト用メソッド
 class pdf_stream_link_open_test(object):
 
-    def on_get(cls, req, resp):
+    def on_post(cls, req, resp):
         print(req.headers)
 
         global pdf 
@@ -61,6 +61,48 @@ class pdf_stream_link_open_test(object):
         resp.status = falcon.HTTP_200
         resp.content_type = "application/pdf"
 
+class pdf_stream_buffering_open(object):
+
+    def on_get(cls, req, resp):
+        print(req.headers)
+
+        global pdf 
+        pdf = HPDF_New (error_handler, NULL)
+        if (not pdf):
+            printf ("error: cannot create PdfDoc object\n")
+            return 1
+
+        # JPEncoding
+        HPDF_UseJPEncodings (pdf)
+        HPDF_UseJPFonts (pdf)
+
+        # create default-font
+        font = HPDF_GetFont (pdf, "Helvetica", NULL)
+
+        # add a new page object.
+        page = HPDF_AddPage (pdf)
+
+        # A4 size
+        HPDF_Page_SetSize (page, HPDF_PAGE_SIZE_A4, HPDF_PAGE_PORTRAIT)
+        HPDF_SetPageMode (page, HPDF_PAGE_MODE_FULL_SCREEN)
+
+        # 72dpi A4 size : width x height = 847 x 595
+        page_x = 595
+        page_y = 820
+    
+        HPDF_Page_SetFontAndSize (page, font, 10)
+        HPDF_SaveToStream(pdf)
+
+        size = HPDF_GetStreamSize(pdf)
+        buf = bytearray(size)
+
+        HPDF_ReadFromStream(pdf, POINTER(c_ubyte(buf)), POINTER(c_uint32(size)))
+
+        resp.body = buf.read()
+        resp.status = falcon.HTTP_200
+        resp.content_type = "application/pdf"
+        buf.close()
+
 class HelloResource(object):
 
     def on_get(self, req, resp):
@@ -74,10 +116,11 @@ app = falcon.API()
 falcon.RequestOptions.auto_parse_form_urlencoded = True
 app.add_route("/", HelloResource())
 app.add_route("/stream_link_open", pdf_stream_link_open_test())
+app.add_route("/buffering_link_open", pdf_stream_buffering_open())
 
 if __name__ == "__main__":
 
     from wsgiref import simple_server
-    httpd = simple_server.make_server("192.168.33.13", 8000, app)
+    httpd = simple_server.make_server("192.168.1.5", 8000, app)
     httpd.serve_forever()
 
