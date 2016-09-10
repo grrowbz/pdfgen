@@ -6,6 +6,36 @@
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
 
 <script type="text/javascript">
+
+function export_pdf(url, post_data) {
+
+    var a = document.createElement("a");
+    document.body.appendChild(a);
+    a.style = "display: none";
+
+    window.URL = window.URL || window.webkitURL;
+
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', url, true);
+    xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+    xhr.responseType = 'arraybuffer'; 
+
+    xhr.onload = function(e) {
+        if (this.status == 200) { 
+
+            // PDFファイルをダウンロードする
+            var response_data = this.response;
+            var file = new Blob([response_data], {type: 'application/pdf'});
+            var url = URL.createObjectURL(file);
+            a.href = url;
+			a.target = "_blank";
+            a.click();
+            window.URL.revokeObjectURL(url); // 別タブで開いてPDFファイルを表示する
+        }
+    };
+    xhr.send(JSON.stringify(post_data));
+};
+
 $(function(){
 
 	$("#button").click( function(){
@@ -13,29 +43,7 @@ $(function(){
 			title: $("#title").val(),
 			date: $("#date").val()
 		}; 
-
-		$.ajax({
-			type : 'post',
-			url : '/pdfgen',
-			data : JSON.stringify(JSONdata),
-			contentType: 'application/JSON',
-			dataType : 'JSON',
-			scriptCharset: 'utf-8',
-			success : function(data) {
-				$("#response").html(JSON.stringify(data));
-			},
-			error : function(data) { 
-				$("#response").html(JSON.stringify(data));
-			}
-		});
-	});
-
-	$("#pdfget").click( function(){
-		var JSONdata = {
-			title: $("#title").val(),
-			date: $("#date").val()
-		}; 
-		$.get("/pdftest", JSON.stringify(JSONdata), function(data) { console.log(data); });		
+		export_pdf('/stream_link_open', JSONdata);
 	});
 });
 </script>
@@ -44,14 +52,14 @@ $(function(){
 	
 <p>タイトル：<input id="title" name="title" type="text" value="システム開発サンプル" /></p>
 <p>日付：<input id="date" name="date" type="text" value="某月某日" /></p>
-<p><button id="button" type="button">PDF生成!</button></p>
+<p><button id="button" type="button" >PDF生成!</button></p>
 <p><button id="pdfget" type="button">PDF取得!</button></p>
 <textarea id="response" cols=120 rows=10 disabled></textarea>
 
 <!-- pdfのリンクをオープン -->
-<p><a href="/row_link_open" target="_blank" >pdfを普通に開く</a></p>
+<p><a href="/stream_link_open" target="_blank" >pdfを普通に開く</a></p>
 
-<p><a href="/stream_link_open" target="_blank">pdfをストリームで開く</a></p>
+<p><a href="/buffering_link_open" target="_blank">pdfをストリームで開く</a></p>
 
 </body>
 </html>
