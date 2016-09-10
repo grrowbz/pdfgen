@@ -28,6 +28,7 @@ class pdf_stream_link_open_test(object):
 
     def on_post(cls, req, resp):
         print(req.headers)
+        print(req.stream.read())
 
         global pdf 
         pdf = HPDF_New (error_handler, NULL)
@@ -121,6 +122,6 @@ app.add_route("/buffering_link_open", pdf_stream_buffering_open())
 if __name__ == "__main__":
 
     from wsgiref import simple_server
-    httpd = simple_server.make_server("192.168.1.5", 8000, app)
+    httpd = simple_server.make_server("192.168.33.13", 8000, app)
     httpd.serve_forever()
 

@@ -9,7 +9,7 @@ import os, sys
 path = os.path.dirname(__file__)
 sys.path.append(os.path.join(path, '../app/'))
 
-from generate_pdf import *
+from libharu import *
 
 class HelloResource(object):
 
@@ -19,6 +19,7 @@ class HelloResource(object):
         print(req.cookies)
         resp.status = falcon.HTTP_200
         resp.content_type = 'text/html'
+    
         f = open(os.path.join(path, "sample.html"), 'r')
         resp.body = f.read()
         f.close()
@@ -26,14 +27,18 @@ class HelloResource(object):
 class PdfGenerator(object):
 
     def on_post(cls, req, resp):
+        haru    = LibHaru()
+        haru.open().page_setsize(HPDF_PAGE_SIZE_A4, HPDF_PAGE_PORTRAIT).mbEnable('JP')
         print(req.headers)
         print(req.cookies)
         print(req.stream.read().decode('utf-8'))
+        #print(req.content_length)
         resp.status = falcon.HTTP_200
         resp.content_type = "application/pdf"
-        event = { "test" : "test", "hoge" : "hoge" }
-        context = { "help" : "key" }
-        resp.body = lambda_handler(event, context)
+        haru.save('/tmp/.tmp.pdf')
+        with open('/tmp/.tmp.pdf', 'r') as f:
+            resp.body = f.read()
+        haru.close()
 
 app = falcon.API()
 falcon.RequestOptions.auto_parse_form_urlencoded = True
