@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 # vim:set ts=4 sw=4 expandtab fenc=utf-8:
 #
-
 import falcon
 import os, sys
 
@@ -11,24 +10,27 @@ sys.path.append(os.path.join(path, '../app/'))
 
 from generate_pdf import *
 
+def before_resource(req, resp, resource, params):
+    print('Headers : ' + str(req.headers))
+    print("Params  : " + str(req.params))
+    print("Cookies : " + str(req.cookies))
+    if req.method == 'POST':
+        print("Body    : " + req.stream.read().decode('utf-8'))
+
+@falcon.before(before_resource)
 class HelloResource(object):
 
     def on_get(self, req, resp):
-        print(req.headers)
-        print(req.params)
-        print(req.cookies)
         resp.status = falcon.HTTP_200
         resp.content_type = 'text/html'
         f = open(os.path.join(path, "sample.html"), 'r')
         resp.body = f.read()
         f.close()
 
+@falcon.before(before_resource)
 class PdfGenerator(object):
 
     def on_post(cls, req, resp):
-        print(req.headers)
-        print(req.cookies)
-        print(req.stream.read().decode('utf-8'))
         resp.status = falcon.HTTP_200
         resp.content_type = "application/pdf"
         event = { "test" : "test", "hoge" : "hoge" }

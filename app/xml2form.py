@@ -16,7 +16,7 @@ def main():
 	xml		= Libxml2form()
 	action	= {'rectangle': { 'func':'rect', 'attrib':['width', 'height', 'line', 'fill']} }
 
-	xml.open_xml('./estimate.xml')
+	xml.open_xml('../assets/tpl/estimate.xml')
 	PAGE_SIZE	= globals()[xml.element('doc', 'page_size')]
 	LANDSCAPE	= globals()[xml.element('doc', 'landscape')]
 
@@ -38,7 +38,7 @@ def main():
 		except AttributeError:
 			print "No have method %s in %s", [_func, draw.__class__.__name__]
 
-		method(_posx, _posy, *[ [1,1,1] if attr in _rgb else e.get(attr) for attr in _attr if attr in e.attrib ])
+		#method(_posx, _posy, *[ [1,1,1] if attr in _rgb else e.get(attr) for attr in _attr if attr in e.attrib ])
 			
 
 	haru.close()
