@@ -16,7 +16,7 @@ def main():
 	xml		= Libxml2form()
 	action	= {'rectangle': { 'func':'rect', 'attrib':['width', 'height', 'line', 'fill']} }
 
-	xml.open_xml('../assets/tpl/estimate.xml')
+	xml.open_xml(os.path.join(os.path.dirname(__file__), '../assets/tpl/invoice.xml'))
 	PAGE_SIZE	= globals()[xml.element('doc', 'page_size')]
 	LANDSCAPE	= globals()[xml.element('doc', 'landscape')]
 
@@ -39,8 +39,8 @@ def main():
 			print "No have method %s in %s", [_func, draw.__class__.__name__]
 
 		#method(_posx, _posy, *[ [1,1,1] if attr in _rgb else e.get(attr) for attr in _attr if attr in e.attrib ])
+		method(_posx, _posy, 100, 30, *[1,1,1] )
 			
-
 	haru.close()
 	return 0
 
