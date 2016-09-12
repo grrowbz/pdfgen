@@ -69,7 +69,7 @@ class LibHaru():
 
 	def putStream(cls, toDest):
 		HPDF_SaveToStream(cls.__pdf, toDest, HPDF_GetStreamSize(cls.__pdf))
-		return HPDF_ReadFromStream
+		return cls
 
 	def getPage(cls): return cls.pages[cls.nowPage - 1]
 	def getPdf(cls): return cls.__pdf

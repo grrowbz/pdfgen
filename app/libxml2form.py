@@ -42,8 +42,6 @@ class Libxml2form():
 	def findall(self, elmName):
 		return self.__toptree.findall(".//{}".format(elmName))
 		
-		
-
 class LibxmlIteration():
 
 	def __init__(self, *etrList):

@@ -4,12 +4,16 @@
 #
 
 import os, sys
-from libharu import *
+import libharu
 
 def lambda_handler(event, context):
-    haru    = Libharu()
-    haru.open().page_setsize(HPDF_PAGE_SIZE_A4, HPDF_PAGE_PORTRAIT).mbEnable('JP')
+    haru    = libharu.LibHaru()
+    haru.open().page_setsize( libharu.HPDF_PAGE_SIZE_A4,
+                              libharu.HPDF_PAGE_PORTRAIT ).mbEnable('JP')
 
     haru.save('/tmp/.tmp.pdf')
+    with open('/tmp/.tmp.pdf', 'r') as f:
+        return f.read()
+    ## ここはちゃんと動作する？要確認
     haru.close()
-    return "ok"
+    f.close()
