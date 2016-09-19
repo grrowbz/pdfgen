@@ -1,6 +1,6 @@
 #!/bin/env python
 # -*- coding: utf-8 -*-
-# vim:set ts=4 fenc=utf-8:
+# vim:set ts=4 sw=4 expandtab fenc=utf-8:
 #
 # libxml2form -- libxml2form.py
 #
@@ -23,7 +23,7 @@ class Libxml2form():
 			return 1
 
 		self.__xmltree.parse(fname)
-		self.__toptree		= self.__xmltree.getroot()
+		self.__toptree  = self.__xmltree.getroot()
 		return self
 
 	def element(self, elmName, attr):
@@ -32,6 +32,10 @@ class Libxml2form():
 			return false
 		return __tag.get(attr)
 
+    def iterator(self):
+		itr	= LibxmlIteration()
+		return itr;
+        
 	def itr_elements(self, elmName):
 		itr	= LibxmlIteration(self.findall(format(elmName)))
 		return itr;
