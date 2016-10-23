@@ -18,13 +18,14 @@
 ## http://groups.google.com/group/pythoncia
 
 import os, sys
-
 from ctypes import *
+
+path = os.path.dirname(__file__)
+sys.path.append(os.path.join(path, '../app/'))
 
 from haru import *
 from haru.c_func import *
 from haru.hpdf_errorcode import *
-
 
 @HPDF_Error_Handler(None, HPDF_UINT, HPDF_UINT, c_void_p)
 def error_handler (error_no, detail_no, user_data):
