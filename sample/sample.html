@@ -39,8 +39,18 @@ $(function(){
 
 	$("#button").on('click', function(){
 		var JSONdata = {
+			template: $("#template").val(),
+			create_date: $("#create_date").val(),
+			project_no: $("#project_no").val(),
+			order_no: $("#order_no").val(),
+			client_name: $("#client_name").val(),
 			title: $("#title").val(),
-			date: $("#date").val()
+			delivery_deadline: $("#delivery_deadline").val(),
+			delivery_method: $("#delivery_method").val(),
+			payment_terms: $("#payment_terms").val(),
+			term_limit: $("#term_limit").val(),
+			item_data: $("#item_data").val(),
+			price: $("#price").val()
 		}; 
 		export_pdf('/generate', JSONdata);
 	});
@@ -49,9 +59,55 @@ $(function(){
 </head>
 <body>
 	
-<p>タイトル：<input id="title" name="title" type="text" value="システム開発サンプル" /></p>
-<p>日付：<input id="date" name="date" type="text" value="某月某日" /></p>
+<p>テンプレート：
+<select id="template" name="template" type="text">
+<option value="invoice">請求書</option>
+<option value="purchase_order">発注書</option>
+<option value="estimate">見積書</option>
+</select></p>
+<p>作成日：<input id="create_date" name="date" type="text" value="某月某日" /></p>
+<p>案件番号：<input id="project_no" name="date" type="text" value="10000XX" /></p>
+<p>請求番号：<input id="order_no" name="date" type="text" value="1" /></p>
+
+<p>取引先名：<input size=60
+					id="client_name" 
+					name="client_name"
+					type="text"
+					value="ＡＲアドバンストテクノロジー株式会社" /></p>
+
+<p>件　名　：<input size=60 
+					id="title"
+					name="title"
+					type="text"
+					value="システム開発サンプル" /></p>
+
+<p>納入期限：<input id="delivery_deadline"
+					name="delivery_deadline"
+					type="text"
+					value="某月某日" /></p>
+
+<p>納入方式：<input id="delivery_method"
+					name="delivery_method"
+					type="text"
+					value="某月某日" /></p>
+
+<p>支払条件：<input size=60 
+                    id="payment_terms"
+					name="payment_terms"
+					type="text"
+					value="納品月の月末締め、翌月末日に銀行振込での現金払い。" /></p>
+
+<p>支払期限：<input id="term_limit"
+					name="term_limit"
+					type="text"
+					value="某月某日" /></p>
+
+<p>金　額　：<input id="price"
+					name="price"
+					type="text"
+					value="" /></p>
+
+<textarea id="item_data" name="item_data" cols=120 rows=10></textarea>
 <p><button id="button" type="button" >PDF生成!</button></p>
-<textarea id="response" cols=120 rows=10 disabled></textarea>
 </body>
 </html>
