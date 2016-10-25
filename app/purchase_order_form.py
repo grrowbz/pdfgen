@@ -44,7 +44,7 @@ class PurchaseOrderForm(BasicForm):
         cls.setFont("Regular", 12,[0.25,0.25,0.25])
         cls.text.put(u'御中').write(240, 111).flush()
         cls.setFont("Regular", 14,[0.25,0.25,0.25])
-        cls.text.put(u'株式会社Grrow').write(27, 111).flush()
+        cls.text.put(u'株式会社Grrow test').write(27, 111).flush()
 
         cls.setFont("Regular", 12,[0.25,0.25,0.25])
         length  = cls.haru.getX() - (len(client_name) * 13)
@@ -71,6 +71,23 @@ class PurchaseOrderForm(BasicForm):
     def setPrice(cls, price):
         super(cls.__class__, cls).setPrice(u'発注金額（税込）', price)
 
+	def setPenApple(cls, deliverables):
+		super(cls.__class__, cls).setTest(deliverables)
+
+	def setTest(cls):
+		cls.setFont("Regular",9,[0.25,0.25,0.25])
+
     def createObject(cls):
         return cls.haru
+
+if __name__ == '__main__':
+
+	haru	= LibHaru()
+	form	= PurchaseOrderForm(haru)
+
+	for x in dir(form):
+		print x
+	
+	form.setPenApple("test")
+	haru.close()
 

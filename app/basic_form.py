@@ -92,6 +92,9 @@ class BasicForm(object):
         ItemBoxY = BoxY + 12
         for var in range(1, 21):
             self.draw.dash_line(25, ItemBoxY + 15 * var, 540, 0.7, [2, 1], [0.3, 0.3, 0.3])
+	
+	def setTest2(cls):
+		pass
 
     def setCompanyInfomation(cls):
         ## company information
@@ -153,6 +156,18 @@ class BasicForm(object):
         length  = 565 - ((len(price) * 8) + (len(price) / 3) * 3.5)
         cls.setFont("Regular",11,[0.25,0.25,0.25])
         cls.text.put(u"￥" + "{:,}".format(int(price))).write(length, 692).flush()
+
+	def setTest(cls, deliverables):
+		pass
+
+	def setDeliverables(cls, deliverables):
+		pass
+
+	def setRemarksCoumn(cls, remarks):
+		pass
+
+	def setItemData(cls, Item):
+		pass
 
     def createObject(cls):
         return cls.haru

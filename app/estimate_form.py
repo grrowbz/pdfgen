@@ -6,7 +6,7 @@
 #
 
 import os, sys
-from basic_form import *
+from basic_form import * 
 from ctypes import *
 from libharu import *
 
