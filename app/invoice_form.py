@@ -60,3 +60,12 @@ class InvoiceForm(BasicForm):
     def createObject(cls):
         return cls.haru
 
+if __name__ == '__main__':
+
+	haru	= LibHaru()
+	invform	= InvoiceForm(haru)
+
+	for x in dir(invform):
+		print x
+	
+	haru.close()

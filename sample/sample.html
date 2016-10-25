@@ -50,6 +50,8 @@ $(function(){
 			payment_terms: $("#payment_terms").val(),
 			term_limit: $("#term_limit").val(),
 			item_data: $("#item_data").val(),
+			deliverables: $("#deliverables").val(),
+			remarks_column: $("#remarks_column").val(),
 			price: $("#price").val()
 		}; 
 		export_pdf('/generate', JSONdata);
@@ -107,7 +109,9 @@ $(function(){
 					type="text"
 					value="" /></p>
 
-<textarea id="item_data" name="item_data" cols=120 rows=10></textarea>
+<textarea id="item_data" name="item_data" cols=120 rows=8></textarea>
+<textarea id="deliverables" name="deliverables" cols=120 rows=4></textarea>
+<textarea id="remarks_column" name="remarks_column" cols=120 rows=4></textarea>
 <p><button id="button" type="button" >PDF生成!</button></p>
 </body>
 </html>

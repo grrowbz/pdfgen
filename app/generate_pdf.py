@@ -23,6 +23,9 @@ def lambda_handler(event, context):
     else:
         form.setProjectNumber(context['project_no'])
 
+    for x in dir(form):
+       print x
+
     if context['template'] in ["estimate", "purchase_order"]:
         form.setDeliveryDeadline(context['delivery_deadline'])
         form.setDeliveryMethod(context['delivery_method'])
@@ -35,7 +38,10 @@ def lambda_handler(event, context):
     form.setTitle(context['title'])
     form.setPrice(context['price'])
 
-    print(context['item_data'])
+#    form.setPenApple(context['deliverables'])
+#    form.setTest2("test")
+#    form.setRemakrsColumn(context['remarks_column'])
+#    form.setItemData(context['item_data'])
 
     form.createObject().save('/tmp/.tmp.pdf')
     with open('/tmp/.tmp.pdf', 'r') as f:
