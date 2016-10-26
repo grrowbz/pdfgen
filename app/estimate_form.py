@@ -42,7 +42,7 @@ class EstimateForm(BasicForm):
         self.text.put(u'納 入 方 式 　 ：').write(25, 217).flush()
         self.text.put(u'御 支 払 条 件 ：').write(25, 235).flush()
 
-        self.setCompanyInfomation()
+        self.setCompanyInfo()
         self.setSignBox()
 
     ### invoice meta infomation set methods 
@@ -66,6 +66,15 @@ class EstimateForm(BasicForm):
     def setPrice(cls, price):
         super(cls.__class__, cls).setPrice(u'お見積金額（税込）', price)
 
-	def createObject(cls):
-		return cls.haru
+    def createObject(cls):
+        return cls.haru
 
+if __name__ == '__main__':
+
+    haru	= LibHaru()
+    form	= EstimateForm(haru)
+
+    for x in dir(form):
+        print x
+
+    haru.close()
