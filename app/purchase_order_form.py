@@ -71,12 +71,6 @@ class PurchaseOrderForm(BasicForm):
     def setPrice(cls, price):
         super(cls.__class__, cls).setPrice(u'発注金額（税込）', price)
 
-	def setPenApple(cls, deliverables):
-		super(cls.__class__, cls).setTest(deliverables)
-
-	def setTest(cls):
-		cls.setFont("Regular",9,[0.25,0.25,0.25])
-
     def createObject(cls):
         return cls.haru
 
@@ -88,6 +82,5 @@ if __name__ == '__main__':
 	for x in dir(form):
 		print x
 	
-	form.setPenApple("test")
 	haru.close()
 
