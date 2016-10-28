@@ -6,6 +6,7 @@
 import os, sys
 import libharu
 import invoice_form, estimate_form, purchase_order_form
+import json
 
 def lambda_handler(event, context):
     haru        = libharu.LibHaru()
@@ -38,11 +39,22 @@ def lambda_handler(event, context):
     form.setTitle(context['title'])
     form.setPrice(context['price'])
 
-#    form.setPenApple(context['deliverables'])
-#    form.setTest2("test")
-#    form.setRemakrsColumn(context['remarks_column'])
-#    form.setItemData(context['item_data'])
+    form.setDeliverables(context['deliverables'])
+    form.setRemarksColumn(context['remarks_column'])
 
+    p      = json.loads(context['item_data'])
+    for x in range(1,21):
+        if( p.has_key(unicode(x)) ):
+            if (p[unicode(x)].has_key(u'num')):
+                form.setItemData(   x, x,
+                                    p[unicode(x)][u'item'],
+                                    p[unicode(x)][u'num'],
+                                    p[unicode(x)][u'unit'],
+                                    p[unicode(x)][u'uprice'],
+                                    p[unicode(x)][u'price'])
+            else:
+                form.setItemDataForOnlySubTitle(   x, x, p[unicode(x)][u'item'])
+    
     form.createObject().save('/tmp/.tmp.pdf')
     with open('/tmp/.tmp.pdf', 'r') as f:
         return f.read()

@@ -41,6 +41,12 @@ class InvoiceForm(BasicForm):
         self.setCompanyInfo()
         self.setSignBox()
 
+    def setRemarksColumn(cls, remarks):
+        super(cls.__class__, cls).setRemarksColumn(u"【お振込先金融機関】")
+        super(cls.__class__, cls).setRemarksColumn(u"　東京三菱UFJ銀行　麻布支店　0196203", 2)
+        super(cls.__class__, cls).setRemarksColumn(u"　株式会社Grrow", 3)
+        super(cls.__class__, cls).setRemarksColumn(remarks, 4)
+
     ## invoice meta infomation set methods 
     def setProjectNumber(cls, number, order):
         cls.setFont("Regular",9.5,[0.25,0.25,0.25])
@@ -62,10 +68,10 @@ class InvoiceForm(BasicForm):
 
 if __name__ == '__main__':
 
-	haru	= LibHaru()
-	invform	= InvoiceForm(haru)
+    haru	= LibHaru()
+    invform	= InvoiceForm(haru)
 
-	for x in dir(invform):
-		print x
-	
-	haru.close()
+    for x in dir(invform):
+        print x
+
+    haru.close()

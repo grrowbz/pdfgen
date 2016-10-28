@@ -6,8 +6,11 @@
 #
 
 import os, sys
-from ctypes import *
 
+path = os.path.dirname(__file__)
+sys.path.append(os.path.join(path, '../app/'))
+
+from ctypes import *
 from haru import *
 from haru.c_func import *
 from haru.hpdf_errorcode import *
@@ -20,70 +23,65 @@ def error_handler (error_no, detail_no, user_data):
     HPDF_Free (pdf)
     sys.exit(1)
 
-def main():
+def raw_handler(event, context):
 
-	global pdf 
-	pdf = HPDF_New (error_handler, NULL)
-	if (not pdf):
-		printf ("error: cannot create PdfDoc object\n")
-		return 1
+    global pdf 
+    pdf = HPDF_New (error_handler, NULL)
+    if (not pdf):
+        printf ("error: cannot create PdfDoc object\n")
+        return 1
 
-	# JPEncoding
-	HPDF_UseJPEncodings (pdf)
-	HPDF_UseJPFonts (pdf)
+    # JPEncoding
+    HPDF_UseJPEncodings (pdf)
+    HPDF_UseJPFonts (pdf)
 
-	# create default-font
-	font = HPDF_GetFont (pdf, "Helvetica", NULL)
+    # create default-font
+    font = HPDF_GetFont (pdf, "Helvetica", NULL)
 
-	# add a new page object.
-	page = HPDF_AddPage (pdf)
+    # add a new page object.
+    page = HPDF_AddPage (pdf)
 
     # A4 size
-	HPDF_Page_SetSize (page, HPDF_PAGE_SIZE_A4, HPDF_PAGE_PORTRAIT)
-	HPDF_SetPageMode (page, HPDF_PAGE_MODE_FULL_SCREEN)
+    HPDF_Page_SetSize (page, HPDF_PAGE_SIZE_A4, HPDF_PAGE_PORTRAIT)
+    HPDF_SetPageMode (page, HPDF_PAGE_MODE_FULL_SCREEN)
 
-	# 72dpi A4 size : width x height = 847 x 595
-	page_x = 595
-	page_y = 820
-	
-	HPDF_Page_SetFontAndSize (page, font, 10)
+    # 72dpi A4 size : width x height = 847 x 595
+    page_x = 595
+    page_y = 820
 
-	# Draw Rectangle
-	HPDF_Page_SetLineWidth (page, 2)
-	HPDF_Page_SetRGBStroke (page, 0, 0, 0)
-	HPDF_Page_SetRGBFill (page, 0.4, 0.4, 0.4)
+    HPDF_Page_SetFontAndSize (page, font, 10)
 
-	HPDF_Page_Rectangle(page, 25, page_y - 25, 545, 25)
-	HPDF_Page_Fill (page)
+    # Draw Rectangle
+    HPDF_Page_SetLineWidth (page, 2)
+    HPDF_Page_SetRGBStroke (page, 0, 0, 0)
+    HPDF_Page_SetRGBFill (page, 0.4, 0.4, 0.4)
 
-	#### title text ####
-	font_size	= 16 
-	page_title	= u'御　請　求　書'.encode('euc-jp')
+    HPDF_Page_Rectangle(page, 25, page_y - 25, 545, 25)
+    HPDF_Page_Fill (page)
 
-	font_name	= HPDF_LoadTTFontFromFile (pdf, "./font_1_ant-kaku.ttf", HPDF_TRUE);
-	font 		= HPDF_GetFont (pdf, font_name, "EUC-H")
+    #### title text ####
+    font_size	= 16 
+    page_title	= u'Invoice'.encode('euc-jp')
 
-	HPDF_Page_SetFontAndSize (page, font, font_size)
-	HPDF_Page_SetRGBFill (page, 1, 1, 1)
+    filename1="%s" % path + '/../assets/img/sign.png'
+    print filename1
 
-	char_size	= HPDF_Page_TextWidth(page, page_title)
+    image = HPDF_LoadPngImageFromFile (pdf, filename1)
+    # Draw image to the canvas.
+    
+    HPDF_Page_DrawImage (page, image, 100, 300, HPDF_Image_GetWidth (image) / 20,
+                                          HPDF_Image_GetHeight (image) / 20)
 
-	HPDF_Page_BeginText (page)
-	HPDF_Page_MoveTextPos(page, page_x / 2 - (char_size / 2), page_y - 20)
-	HPDF_Page_ShowText (page, page_title)
-	HPDF_Page_EndText (page)
+    HPDF_Page_SetRGBFill (page, 1, 1, 1)
+
+    char_size	= HPDF_Page_TextWidth(page, page_title)
+
+    HPDF_Page_BeginText (page)
+    HPDF_Page_MoveTextPos(page, page_x / 2 - (char_size / 2), page_y - 20)
+    HPDF_Page_ShowText (page, page_title)
+    HPDF_Page_EndText (page)
 
     # save the document to a file
-	HPDF_SaveToFile (pdf, '/vagrant_data/demo.pdf')
-
-    # clean up
-	HPDF_Free (pdf)
-
-	return 0 
-
-if HPDF_NOPNGLIB:
-    printf("WARNING: if you want to run this demo, \n"
-           "make libhpdf with HPDF_USE_PNGLIB option.\n")
-    sys.exit(1)
-else:
-    main()
+    HPDF_SaveToFile (pdf, '/tmp/.demo.pdf')
+    with open('/tmp/.demo.pdf', 'r') as f:
+        return f.read()
