@@ -87,6 +87,7 @@ class BasicForm(object):
         self.draw.line(305, InfoBoxY + 46, 260, 1, [0.27, 0.27, 0.27])
         self.draw.line(305, InfoBoxY + 68, 175, 1, [0.27, 0.27, 0.27])
 
+        ### 備考
         self.draw.rect(25, 715, 540, 100, 1, [0.27, 0.27, 0.27])
 
         ItemBoxY = BoxY + 12
@@ -154,14 +155,39 @@ class BasicForm(object):
         cls.setFont("Regular",11,[0.25,0.25,0.25])
         cls.text.put(u"￥" + "{:,}".format(int(price))).write(length, 692).flush()
 
-    def setDeliverables(cls, deliverables):
-        pass
+    def setDeliverables(cls, deliverables, num=1):
+        cls.setFont("Regular",8.5,[0.25,0.25,0.25])
+        cls.text.put(deliverables).write(75, 633 + (12 * num)).flush()
 
-    def setRemarksCoumn(cls, remarks):
-        pass
+    def setRemarksColumn(cls, remarks, num=1):
+        cls.setFont("Regular",8.5,[0.25,0.25,0.25])
+        cls.text.put(remarks).write(30, 718 + (12 * num)).flush()
 
-    def setItemData(cls, Item):
-        pass
+    def setItemData(cls, LineNo, no, item, num, unit, uprice, price):
+        cls.setFont("Regular",8.5,[0.25,0.25,0.25])
+        ListPosition = 314 + (15 * LineNo) - 3
+
+        if ( 1 != len(str(int(no))) % 2):
+            adjust = 2
+        else:
+            adjust = 0
+
+        cls.text.put(unicode(no)).write(25 + 10 - adjust, ListPosition).flush()
+        cls.text.put(unicode(item)).write(50 + 3, ListPosition).flush()
+        cls.text.put(unicode(num)).write(330 + 23, ListPosition).flush()
+        cls.text.put(unicode(unit)).write(380 + 12, ListPosition).flush()
+
+        length  = len(str(int(uprice * 8)))
+        cls.text.put(unicode(uprice)).write(415 + 65 - length, ListPosition).flush()
+
+        length  = len(str(int(price * 8)))
+        cls.text.put(unicode(price)).write(480 + 85 - length, ListPosition).flush()
+
+    def setItemDataForOnlySubTitle(cls, LineNo, no, item):
+        cls.setFont("Regular",8.5,[0.25,0.25,0.25])
+        ListPosition = 314 + (15 * LineNo) - 3
+        cls.text.put(unicode(no)).write(25 + 10, ListPosition).flush()
+        cls.text.put(unicode(item)).write(50 + 3, ListPosition).flush()
 
     def createObject(cls):
         return cls.haru

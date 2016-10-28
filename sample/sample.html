@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <title>HTMLファイルからPOSTでJSONデータを送信する</title>
+<script type="text/javascript" src="http://192.168.33.1:8080/js/jquery.min.js"></script>
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
 
 <script type="text/javascript">
@@ -20,7 +21,7 @@ function export_pdf(url, post_data) {
     xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
     xhr.responseType = 'blob'; 
 
-	var w = window.open("", "preview")
+    var w = window.open("", "preview");
 
     xhr.send(JSON.stringify(post_data));
     xhr.onload = function(e) {
@@ -29,38 +30,38 @@ function export_pdf(url, post_data) {
             var response_data = this.response;
             var file = new Blob([response_data], {type: 'application/pdf'});
             var url = URL.createObjectURL(file);
-			w.location.href = url;
-			w.revokeObjectURL(url);
-        }
+            w.location.href = url;
+            w.revokeObjectURL(url);
+        };
     };
 };
 
 $(function(){
 
-	$("#button").on('click', function(){
-		var JSONdata = {
-			template: $("#template").val(),
-			create_date: $("#create_date").val(),
-			project_no: $("#project_no").val(),
-			order_no: $("#order_no").val(),
-			client_name: $("#client_name").val(),
-			title: $("#title").val(),
-			delivery_deadline: $("#delivery_deadline").val(),
-			delivery_method: $("#delivery_method").val(),
-			payment_terms: $("#payment_terms").val(),
-			term_limit: $("#term_limit").val(),
-			item_data: $("#item_data").val(),
-			deliverables: $("#deliverables").val(),
-			remarks_column: $("#remarks_column").val(),
-			price: $("#price").val()
-		}; 
-		export_pdf('/generate', JSONdata);
-	});
+    $("#button").on('click', function(){
+        var JSONdata = {
+        template: $("#template").val(),
+        create_date: $("#create_date").val(),
+        project_no: $("#project_no").val(),
+        order_no: $("#order_no").val(),
+        client_name: $("#client_name").val(),
+        title: $("#title").val(),
+        delivery_deadline: $("#delivery_deadline").val(),
+        delivery_method: $("#delivery_method").val(),
+        payment_terms: $("#payment_terms").val(),
+        term_limit: $("#term_limit").val(),
+        item_data: $("#item_data").val(),
+        deliverables: $("#deliverables").val(),
+        remarks_column: $("#remarks_column").val(),
+        price: $("#price").val()
+        }; 
+    export_pdf('/generate', JSONdata);
+    });
 });
 </script>
 </head>
 <body>
-	
+
 <p>テンプレート：
 <select id="template" name="template" type="text">
 <option value="invoice">請求書</option>
@@ -110,7 +111,9 @@ $(function(){
 					value="" /></p>
 
 <textarea id="item_data" name="item_data" cols=120 rows=8></textarea>
+納品物：
 <textarea id="deliverables" name="deliverables" cols=120 rows=4></textarea>
+備考：
 <textarea id="remarks_column" name="remarks_column" cols=120 rows=4></textarea>
 <p><button id="button" type="button" >PDF生成!</button></p>
 </body>

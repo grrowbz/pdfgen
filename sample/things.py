@@ -4,6 +4,7 @@
 #
 import falcon
 import os, sys, json
+from haru_demo import *
 
 path = os.path.dirname(__file__)
 sys.path.append(os.path.join(path, '../app/'))
@@ -28,6 +29,16 @@ class HelloResource(object):
         f.close()
 
 @falcon.before(before_resource)
+class RAWTest(object):
+
+    def on_get(self, req, resp):
+        resp.status = falcon.HTTP_200
+        resp.content_type = 'text/html'
+        f = open(os.path.join(path, "raw_test.html"), 'r')
+        resp.body = f.read()
+        f.close()
+
+@falcon.before(before_resource)
 class PdfGenerator(object):
 
     def on_post(cls, req, resp):
@@ -37,10 +48,22 @@ class PdfGenerator(object):
         event = { "test" : "test", "hoge" : "hoge" }
         resp.body = lambda_handler(event, json.loads(req.stream.read().decode('utf-8')))
 
+@falcon.before(before_resource)
+class RAWGenerator(object):
+
+    def on_post(cls, req, resp):
+        resp.status = falcon.HTTP_200
+        resp.content_type = "application/pdf"
+
+        event = { "test" : "test", "hoge" : "hoge" }
+        resp.body = raw_handler(event, json.loads(req.stream.read().decode('utf-8')))
+
 app = falcon.API()
 falcon.RequestOptions.auto_parse_form_urlencoded = True
 app.add_route("/", HelloResource())
+app.add_route("/raw_test", RAWTest())
 app.add_route("/generate", PdfGenerator())
+app.add_route("/raw", RAWGenerator())
 
 if __name__ == "__main__":
 
