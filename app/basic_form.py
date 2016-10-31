@@ -163,19 +163,21 @@ class BasicForm(object):
         cls.setFont("Regular",8.5,[0.25,0.25,0.25])
         cls.text.put(remarks).write(30, 718 + (12 * num)).flush()
 
+    def _adjustCenter(cls, target):
+        ## print "%s: %s".format(target,len(str(target)))
+        if isinstance(target, unicode) or isinstance(target, str):
+            return 2 if( len(target) % 2) else 0
+        else:
+            return 2 if( len(str(int(target))) % 2) else 0
+
     def setItemData(cls, LineNo, no, item, num, unit, uprice, price):
         cls.setFont("Regular",8.5,[0.25,0.25,0.25])
         ListPosition = 314 + (15 * LineNo) - 3
 
-        if ( 1 != len(str(int(no))) % 2):
-            adjust = 2
-        else:
-            adjust = 0
-
-        cls.text.put(unicode(no)).write(25 + 10 - adjust, ListPosition).flush()
+        cls.text.put(unicode(no)).write(25 + 10 - cls._adjustCenter(no), ListPosition).flush()
         cls.text.put(unicode(item)).write(50 + 3, ListPosition).flush()
-        cls.text.put(unicode(num)).write(330 + 23, ListPosition).flush()
-        cls.text.put(unicode(unit)).write(380 + 12, ListPosition).flush()
+        cls.text.put(unicode(num)).write(330 + 23 - cls._adjustCenter(num), ListPosition).flush()
+        cls.text.put(unicode(unit)).write(380 + 14 - cls._adjustCenter(unit), ListPosition).flush()
 
         length  = len(str(int(uprice * 8)))
         cls.text.put(unicode(uprice)).write(415 + 65 - length, ListPosition).flush()
