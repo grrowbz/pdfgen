@@ -9,23 +9,30 @@ import invoice_form, estimate_form, purchase_order_form
 import json
 
 def lambda_handler(event, context):
+
+    ## 必須な値のチェックと足りない場合にエラー
+    ## を返す処理 2016/10/31 未実装
+    ## context['template'] は必須
+
     haru        = libharu.LibHaru()
+    module_name = context['template'] + "_form"
+    class_name  = ''.join(map(lambda n:n[0].upper() + n[1:], module_name.split("_")))
 
-    form_list   = { "invoice" : { "mod":"invoice_form", "class":"InvoiceForm" },
-                    "estimate" : { "mod":"estimate_form", "class":"EstimateForm" },
-                    "purchase_order" : { "mod":"purchase_order_form", "class":"PurchaseOrderForm" }} 
+    ## 無効なモジュール名の呼び出しを検出して、エラーを
+    ## 返す処理を前段で入れる 2016/10/31 未実装
+    form        = getattr(sys.modules[module_name], class_name)(haru)
 
-    useform     = form_list[context['template']]
-    form        = getattr(sys.modules[useform['mod']], useform['class'])(haru)
+    for attr in filter(lambda x: x != 'template',context.keys()):
+        method  = 'set'+''.join(map(lambda n:n[0].upper() + n[1:], attr.split("_")))
+        if hasattr(form, method):
+            getattr(form, method)(context[attr])
+            print method
 
     if context['template'] == "invoice":
         form.setProjectNumber(context['project_no'], context['order_no'])
         form.setOrderNumber(context['order_no'])
     else:
         form.setProjectNumber(context['project_no'])
-
-    for x in dir(form):
-       print x
 
     if context['template'] in ["estimate", "purchase_order"]:
         form.setDeliveryDeadline(context['delivery_deadline'])
@@ -42,18 +49,19 @@ def lambda_handler(event, context):
     form.setDeliverables(context['deliverables'])
     form.setRemarksColumn(context['remarks_column'])
 
-    p      = json.loads(context['item_data'])
-    for x in range(1,21):
-        if( p.has_key(unicode(x)) ):
-            if (p[unicode(x)].has_key(u'num')):
-                form.setItemData(   x, x,
-                                    p[unicode(x)][u'item'],
-                                    p[unicode(x)][u'num'],
-                                    p[unicode(x)][u'unit'],
-                                    p[unicode(x)][u'uprice'],
-                                    p[unicode(x)][u'price'])
-            else:
-                form.setItemDataForOnlySubTitle(   x, x, p[unicode(x)][u'item'])
+    if context['item_data'] :
+        p = json.loads(context['item_data'])
+        for x in range(1,21):
+            if( p.has_key(unicode(x)) ):
+                if (p[unicode(x)].has_key(u'num')):
+                    form.setItemData(   x, x,
+                                        p[unicode(x)][u'item'],
+                                        p[unicode(x)][u'num'],
+                                        p[unicode(x)][u'unit'],
+                                        p[unicode(x)][u'uprice'],
+                                        p[unicode(x)][u'price'])
+                else:
+                    form.setItemDataForOnlySubTitle(   x, x, p[unicode(x)][u'item'])
     
     form.createObject().save('/tmp/.tmp.pdf')
     with open('/tmp/.tmp.pdf', 'r') as f:
