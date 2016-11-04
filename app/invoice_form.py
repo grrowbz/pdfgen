@@ -18,7 +18,7 @@ class InvoiceForm(BasicForm):
 
         ## Header 
         self.setFont("Heavy",16,[1,1,1])
-        self.text.put(u'御　請　求　書').write_with_align("center", 0, 47).flush()
+        self.text.put(u'御　請　求　書').write_with_align("center", self.haru.getX(), 0, 47).flush()
 
         ## invoice meta information
         self.setFont("Regular",9.5,[0.25,0.25,0.25])

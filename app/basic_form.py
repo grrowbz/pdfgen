@@ -113,8 +113,10 @@ class BasicForm(object):
         cls.text.put(ADRESS_2).write(cls.haru.getX() - 166, 179).flush()
 
         cls.setFont("Regular", 9.5,[0.25,0.25,0.25])
-        cls.text.put(POST_NO).write_with_align("right", 135, 166).flush()
-        cls.text.put(PHONE_NO).write_with_align("right", 33, 192).flush()
+        ## 郵便番号の出力位置表示 画面サイズX幅 - 132 - 45
+        cls.text.put(POST_NO).write_with_align("right", 45, cls.haru.getX() - 177, 166, 3).flush()
+        ## 電話番号の設定
+        cls.text.put(PHONE_NO).write_with_align("right", 133, cls.haru.getX() - 166, 192).flush()
 
     def setSignBox(cls):
         ### Sign Box
@@ -145,15 +147,26 @@ class BasicForm(object):
         cls.text.put(title).write(25 + 65, 182).flush()
 
     def setPrice(cls, title, price):
+        subtotal    = int(price)
+        tax         = int(subtotal * 0.08)
+        price       = subtotal + tax
+
+        cls.setFont("Regular",10,[0.25,0.25,0.25])
+        textObj = cls.text.put(u"￥" + "{:,}".format(subtotal))
+        textObj.write_with_align('right', 85, 480, 646, 3 ).flush()
+
+        textObj = cls.text.put(u"￥" + "{:,}".format(tax))
+        textObj.write_with_align('right', 85, 480, 668, 3 ).flush()
+
+        textObj = cls.text.put(u"￥" + "{:,}".format(price))
+        textObj.write_with_align('right', 85, 480, 692, 3 ).flush()
+
         cls.setFont("Regular",13,[0.25,0.25,0.25])
         cls.text.put(title).write(25, 276).flush()
-        length  = (302 + (len(price) * 8) + (len(price) / 3) * 4)
-        cls.setFont("Regular",15,[0.25,0.25,0.25])
-        cls.text.put(u"￥" + "{:,}".format(int(price))).write(cls.haru.getX() - length, 276).flush()
 
-        length  = 565 - ((len(price) * 8) + (len(price) / 3) * 3.5)
-        cls.setFont("Regular",11,[0.25,0.25,0.25])
-        cls.text.put(u"￥" + "{:,}".format(int(price))).write(length, 692).flush()
+        cls.setFont("Regular",15,[0.25,0.25,0.25])
+        textObj = cls.text.put(u"￥" + "{:,}".format(int(price)))
+        textObj.write_with_align('right', 166, 150, 276, 3 ).flush()
 
     def setDeliverables(cls, deliverables, num=1):
         cls.setFont("Regular",8.5,[0.25,0.25,0.25])
@@ -163,27 +176,30 @@ class BasicForm(object):
         cls.setFont("Regular",8.5,[0.25,0.25,0.25])
         cls.text.put(remarks).write(30, 718 + (12 * num)).flush()
 
-    def _adjustCenter(cls, target):
-        ## print "%s: %s".format(target,len(str(target)))
-        if isinstance(target, unicode) or isinstance(target, str):
-            return 2 if( len(target) % 2) else 0
-        else:
-            return 2 if( len(str(int(target))) % 2) else 0
+    def __align(cls, string, x, width, position):
+        print len(string)
+        #return (x + width) - len(string)
 
-    def setItemData(cls, LineNo, no, item, num, unit, uprice, price):
+    def setItemData(cls, LineNo, no, item, qty, unit, uprice, price):
         cls.setFont("Regular",8.5,[0.25,0.25,0.25])
-        ListPosition = 314 + (15 * LineNo) - 3
+        YPos = 314 + (15 * LineNo) - 3
 
-        cls.text.put(unicode(no)).write(25 + 10 - cls._adjustCenter(no), ListPosition).flush()
-        cls.text.put(unicode(item)).write(50 + 3, ListPosition).flush()
-        cls.text.put(unicode(num)).write(330 + 23 - cls._adjustCenter(num), ListPosition).flush()
-        cls.text.put(unicode(unit)).write(380 + 14 - cls._adjustCenter(unit), ListPosition).flush()
+        cls.text.put(str(no)).write_with_align('center', 25, 25, YPos).flush()
+        cls.text.put(unicode(item)).write(50 + 3, YPos).flush()
+        cls.text.put(str(qty)).write_with_align('center', 50, 330, YPos).flush()
+        cls.text.put(unicode(unit)).write_with_align('center', 35, 380, YPos).flush()
 
-        length  = len(str(int(uprice * 8)))
-        cls.text.put(unicode(uprice)).write(415 + 65 - length, ListPosition).flush()
+        if (int(uprice) < 0) :
+            cls.setFont("Regular",8.5,[1,0,0])
+        textObj = cls.text.put(u"￥" + "{:,}".format(int(uprice)))
+        textObj.write_with_align('right', 65, 415, YPos, 3 ).flush()
+        cls.setFont("Regular",8.5,[0.25,0.25,0.25])
 
-        length  = len(str(int(price * 8)))
-        cls.text.put(unicode(price)).write(480 + 85 - length, ListPosition).flush()
+        if (int(uprice) < 0) :
+            cls.setFont("Regular",8.5,[1,0,0])
+        textObj = cls.text.put(u"￥" + "{:,}".format(int(price)))
+        textObj.write_with_align('right', 85, 480, YPos, 3).flush()
+        cls.setFont("Regular",8.5,[0.25,0.25,0.25])
 
     def setItemDataForOnlySubTitle(cls, LineNo, no, item):
         cls.setFont("Regular",8.5,[0.25,0.25,0.25])

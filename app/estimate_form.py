@@ -18,7 +18,7 @@ class EstimateForm(BasicForm):
 
         ## Header 
         self.text.open_font(self.font["Heavy"]).set_style(16,[1,1,1])
-        self.text.put(u'御　見　積　書').write_with_align("center", 0, 47).flush()
+        self.text.put(u'御　見　積　書').write_with_align("center", self.haru.getX(), 0, 47).flush()
 
         ## invoice meta information
         self.setFont("Regular",9.5,[0.25,0.25,0.25])
