@@ -44,7 +44,7 @@ class PurchaseOrderForm(BasicForm):
         cls.setFont("Regular", 12,[0.25,0.25,0.25])
         cls.text.put(u'御中').write(240, 111).flush()
         cls.setFont("Regular", 14,[0.25,0.25,0.25])
-        cls.text.put(u'株式会社Grrow test').write(27, 111).flush()
+        cls.text.put(u'株式会社Grrow').write(27, 111).flush()
 
         cls.setFont("Regular", 12,[0.25,0.25,0.25])
         length  = cls.haru.getX() - (len(client_name) * 13)

@@ -25,7 +25,7 @@ class BasicForm(object):
 
         self.font = {	"Heavy" : font_dir + "GenShinGothic-P-Heavy.ttf",
                         "Regular" : font_dir +"GenShinGothic-P-Regular.ttf",
-                        "Bold" : font_dir + "GenShinGothic-P-Bold.ttf" }
+                        "Bold" : font_dir + "GenShinGothic-P-Bold.ttf"}
         ## Header 
         self.draw.rect_with_fill(25, 27, 545, 25, [0.28, 0.28, 0.28])
 
@@ -139,7 +139,7 @@ class BasicForm(object):
     def setClientName(cls, client_name):
         cls.setFont("Regular", 12,[0.25,0.25,0.25])
         cls.text.put(u'様').write(248, 111).flush()
-        cls.text.put(client_name).write(27, 111).flush()
+        cls.text.put(client_name).setAutoReduce(215).write(27, 111).flush()
 
     ## project name set method
     def setTitle(cls, title):
