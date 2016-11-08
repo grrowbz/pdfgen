@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- vim:set ts=4 fenc=utf-8: -->
+
+<content name="帳票基準テンプレート">
+    <head>
+        <font name="Regular" src="../font/GenShinGothic-P-Regular.ttf" />
+        <font name="Bold" src="../font/GenShinGothic-P-Bold.ttf" />
+        <font name="Heavy" src="../font/GenShinGothic-P-Heavy.ttf" />
+    </head>
+    <doc page_size="HPDF_PAGE_SIZE_A4"
+         landscape="HPDF_PAGE_PORTRAIT" language="JP">
+
+        <block position_x="25" position_y="27"
+            width="545" height="25" fill="484848">
+
+            <text font="regular" size="16" color="ffffff" align="center" 
+                position_x="0" position_y="47">
+                御　請　求　書
+            </text>
+        </block>
+
+        <textarea font="regular" size="9.5" position_x="" position_y="65" 
+            color="454545">
+            test
+        </textarea> 
+
+        <table position_x="25" position_y="302" width="540" height="330">
+            <tr height="12">
+                <th width="25">No</th>
+                <th width="280">商品及び明細</th>
+                <th width="50">数量</th>
+                <th width="35">単位</th>
+                <th width="65">単価</th>
+                <th width="85">金額</th>
+            </tr>
+            <tr height="15" border="dash" for="20">
+                <td width="25"></td>
+                <td width="280"></td>
+                <td width="50"></td>
+                <td width="35"></td>
+                <td width="65"></td>
+                <td width="85"></td>
+            </tr>
+        </table>
+
+		<!--
+		<draw type="rectangle" position_x="25" position_y="27"
+			 width="545" height="25" color="484848" ><text> test </text>
+		</draw>
+		-->
+	</doc>
+</content>
