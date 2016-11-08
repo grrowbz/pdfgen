@@ -20,7 +20,10 @@ def lambda_handler(event, context):
 
     ## 無効なモジュール名の呼び出しを検出して、エラーを
     ## 返す処理を前段で入れる 2016/10/31 未実装
-    form        = getattr(sys.modules[module_name], class_name)(haru)
+    form    = getattr(sys.modules[module_name], class_name)(haru)
+
+    #form.render("../assets/tpl/basic.xml")
+    #form.render("../assets/tpl/" + context['template'] + ".xml")
 
     '''
     メソッドの自動呼び出しを実装中。とりあえず一旦中止

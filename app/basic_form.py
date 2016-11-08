@@ -17,15 +17,21 @@ class BasicForm(object):
     def __init__(self, haru):
 
         self.haru	= haru
-        self.haru.open().page_setsize(HPDF_PAGE_SIZE_A4, HPDF_PAGE_PORTRAIT).mbEnable('JP')
 
         self.draw	= HaruDraw(self.haru)
         self.text	= HaruText(self.haru)
-        font_dir	= os.path.dirname(os.path.realpath(__file__)) + "/../font/"
+
+        #self.haru.open().page_setsize(HPDF_PAGE_SIZE_A4, HPDF_PAGE_PORTRAIT).mbEnable('JP')
+
+        font_dir= os.path.dirname(os.path.realpath(__file__)) + "/../font/"
 
         self.font = {	"Heavy" : font_dir + "GenShinGothic-P-Heavy.ttf",
                         "Regular" : font_dir +"GenShinGothic-P-Regular.ttf",
                         "Bold" : font_dir + "GenShinGothic-P-Bold.ttf"}
+
+        self.render("../assets/tpl/basic.xml")
+
+        """
         ## Header 
         self.draw.rect_with_fill(25, 27, 545, 25, [0.28, 0.28, 0.28])
 
@@ -93,6 +99,64 @@ class BasicForm(object):
         ItemBoxY = BoxY + 12
         for var in range(1, 21):
             self.draw.dash_line(25, ItemBoxY + 15 * var, 540, 0.7, [2, 1], [0.3, 0.3, 0.3])
+        """
+
+    def render(cls, xml):
+        import xml.etree.ElementTree as parser
+
+        ### 最上位要素の処理。
+        root    = parser.parse(xml).getroot()
+        for idx,n in enumerate(root):
+            if n.tag == "head": cls.parseHeader(n)
+            elif n.tag == "doc":
+                docIdx = idx
+                cls.haru.open().page_setsize(eval(n.attrib['page_size']), \
+                                             eval(n.attrib['landscape']))\
+                                             .mbEnable(n.attrib['language'])
+
+        ### ドキュメント要素内を処理
+        for e in list(root[docIdx]):
+            if e.tag == "block": pass
+            elif e.tag == "textarea": pass
+            elif e.tag == "table": cls.renderTable(e)
+
+    def parseHeader(cls, node):
+        for e in list(node):
+            if e.tag == "font": cls.font[e.attrib['name']] = e.attrib['src']
+
+    ### 線表描画メソッド
+    def renderTable(cls, node):
+        tPos    = int(node.attrib['position_x'])
+        yPos = linePos = int(node.attrib['position_y'])
+
+        cls.draw.rect(  tPos, yPos,\
+                        int(node.attrib['width']),\
+                        int(node.attrib['height']),\
+                        1, [0.27, 0.27, 0.27])
+
+        for e in list(node):
+            ## 列(tr)の処理
+            if e.tag == "tr":
+                vertPos = tPos
+                cHeight = int(e.attrib['height'])
+                cls.setFont("Regular",9,[0.25,0.25,0.25])
+
+                print e.attrib['for'] if e.attrib in ['for'] else 1
+                for cell in list(e):
+
+                    if cell.tag == "th":
+                        ## ヘッダー(th)の場合の処理
+                        ### ヘッダーのテキストを描画
+                        cls.text.put(unicode(cell.text)).\
+                            write_with_align('center', int(cell.attrib["width"]),\
+                                    vertPos, yPos + cHeight - 2).flush()
+
+                    cls.draw.rect(  vertPos, linePos,\
+                                    int(cell.attrib["width"]), cHeight,\
+                                    1, [0.27, 0.27, 0.27])
+                    vertPos += int(cell.attrib["width"])
+                else:
+                    linePos += cHeight
 
     def setCompanyInfo(cls):
         ## company information
