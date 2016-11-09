@@ -24,7 +24,7 @@
             test
         </textarea> 
 
-        <table position_x="25" position_y="302" width="540" height="330">
+        <table position_x="25" position_y="302" width="540" height="329">
             <tr height="12">
                 <th width="25">No</th>
                 <th width="280">商品及び明細</th>
@@ -33,7 +33,7 @@
                 <th width="65">単価</th>
                 <th width="85">金額</th>
             </tr>
-            <tr height="15" border="dash" for="20">
+            <tr height="15" border="dash" for="21">
                 <td width="25"></td>
                 <td width="280"></td>
                 <td width="50"></td>

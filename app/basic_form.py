@@ -134,29 +134,37 @@ class BasicForm(object):
                         int(node.attrib['height']),\
                         1, [0.27, 0.27, 0.27])
 
+        ## 列(tr)の処理
         for e in list(node):
-            ## 列(tr)の処理
             if e.tag == "tr":
-                vertPos = tPos
-                cHeight = int(e.attrib['height'])
                 cls.setFont("Regular",9,[0.25,0.25,0.25])
+                cHeight = int(e.attrib['height'])
 
-                print e.attrib['for'] if e.attrib in ['for'] else 1
-                for cell in list(e):
+                for rl in range(0, int(e.attrib['for'] if 'for' in e.attrib else 1)):
+                    vertPos = tPos
 
-                    if cell.tag == "th":
-                        ## ヘッダー(th)の場合の処理
-                        ### ヘッダーのテキストを描画
-                        cls.text.put(unicode(cell.text)).\
-                            write_with_align('center', int(cell.attrib["width"]),\
-                                    vertPos, yPos + cHeight - 2).flush()
+                    ### td/th の処理
+                    for cell in list(e):
+                        cWidth = int(cell.attrib["width"])
+                        ## ヘッダーが(th)の場合の処理
+                        if cell.tag == "th":
+                            ### ヘッダーのテキストを描画
+                            cls.text.put(unicode(cell.text)).\
+                                        write_with_align('center', cWidth,\
+                                        vertPos, yPos + cHeight - 2).flush()
 
-                    cls.draw.rect(  vertPos, linePos,\
-                                    int(cell.attrib["width"]), cHeight,\
-                                    1, [0.27, 0.27, 0.27])
-                    vertPos += int(cell.attrib["width"])
-                else:
-                    linePos += cHeight
+                        ## ヘッダーthの処理：ここまで
+
+                        cls.draw.rect(  vertPos, linePos, cWidth, cHeight,\
+                                        1, [0.27, 0.27, 0.27])
+                        #cls.draw.line(vertPos, linePos, cWidth, 1, [1, 1, 1])
+                        cls.draw.dash_line(vertPos, linePos, cWidth, 0.7, [2, 1], [0.3, 0.3, 0.3])
+
+                        vertPos += cWidth
+                    else:
+                        linePos += cHeight
+                    ### td/thの処理：ここまで
+        ## 列(tr)の処理：ここまで
 
     def setCompanyInfo(cls):
         ## company information
