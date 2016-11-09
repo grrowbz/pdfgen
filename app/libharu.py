@@ -139,6 +139,7 @@ class HaruText(SuperHaruObject):
         cls.__Encoding = Encoding
         cls.__font		= NULL
         cls.__text		= []
+        cls.__size      = 0
         pass
 
     def open_font(cls, fname):
@@ -148,6 +149,7 @@ class HaruText(SuperHaruObject):
         return cls
 
     def set_style(cls, size, color): 
+        cls.__size  = size
         HPDF_Page_SetFontAndSize (cls.page(), cls.__font, size)
         HPDF_Page_SetRGBFill (cls.page(), color[0], color[1], color[2])
         return cls
@@ -156,8 +158,18 @@ class HaruText(SuperHaruObject):
         cls.put(text)
         return HPDF_Page_TextWidth(cls.page(), ''.join(cls.__text))
 
+    ### 2016/11/10 support multi line text
     def put(cls, text):
-        cls.__text.append(text.encode(cls.get_encode()))
+        strArry = text.encode("utf-8").split("\n")
+        if len(strArry) > 1:
+            for st in strArry:
+                cls.__text.extend([ unicode(st, "utf-8").encode(cls.get_encode()), "\n"])
+                ###cls.__text.extend([ unicode(st, "utf-8"), "\n"])
+        else:
+            cls.__text.append(text.encode(cls.get_encode()))
+            ### 本来は↓こっちであるべき（だと思う）が何故かフォントの文字位置？の
+            ### 判定がアスキー文字系だけ狂ってしまう為テンプレート化修正の際に修正
+            #cls.__text.append(text if isinstance(text, unicode) else unicode(text,"utf-8"))
         return cls
 
     def setAutoReduce(cls, size):
@@ -179,10 +191,19 @@ class HaruText(SuperHaruObject):
             cls.write(x + width - char_w - _indent, y)	
         return cls
 
+    ### 2016/11/10 support multi line text
     def write(cls, pos_x, pos_y):
         HPDF_Page_BeginText (cls.page())
         HPDF_Page_MoveTextPos(cls.page(), pos_x, cls.y() - pos_y)
-        HPDF_Page_ShowText (cls.page(), ''.join(cls.__text))
+        HPDF_Page_SetTextLeading(cls.page(), cls.__size);
+        for st in cls.__text:
+            if st == "\n":
+                HPDF_Page_MoveToNextLine(cls.page())
+            else:
+                HPDF_Page_ShowText(cls.page(), ''.join(st))
+                ### 本来は↓こっちであるべき（だと思う）が何故かフォントの文字位置？の
+                ### 判定がアスキー文字系だけ狂ってしまう為テンプレート化修正の際に修正
+                ##HPDF_Page_ShowText(cls.page(), ''.join(st.encode(cls.get_encode())))
         HPDF_Page_EndText (cls.page())
         return cls
 
