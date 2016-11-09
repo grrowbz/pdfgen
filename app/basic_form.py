@@ -153,13 +153,12 @@ class BasicForm(object):
                                         write_with_align('center', cWidth,\
                                         vertPos, yPos + cHeight - 2).flush()
 
-                        ## ヘッダーthの処理：ここまで
-
-                        cls.draw.rect(  vertPos, linePos, cWidth, cHeight,\
+                            cls.draw.rect(  vertPos, linePos, cWidth, cHeight,\
                                         1, [0.27, 0.27, 0.27])
-                        #cls.draw.line(vertPos, linePos, cWidth, 1, [1, 1, 1])
-                        cls.draw.dash_line(vertPos, linePos, cWidth, 0.7, [2, 1], [0.3, 0.3, 0.3])
-
+                        ## ヘッダーthの処理：ここまで
+                        elif cell.tag == "td":
+                            cls.draw.vline(vertPos, linePos+cHeight, cHeight, 1, [0.27, 0.27, 0.27])
+                            cls.draw.dash_line(vertPos, linePos, cWidth, 0.7, [2, 1], [0.3, 0.3, 0.3])
                         vertPos += cWidth
                     else:
                         linePos += cHeight

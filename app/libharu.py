@@ -111,6 +111,16 @@ class HaruDraw(SuperHaruObject):
         HPDF_Page_Stroke (page)
         return cls
 
+    def vline(cls, pos_x, pos_y, length, point, color):
+        page = cls.page()
+        HPDF_Page_SetDash (page, NULL, 0, 0)
+        HPDF_Page_SetLineWidth (page, point)
+        HPDF_Page_SetRGBStroke (page, color[0], color[1], color[2])
+        HPDF_Page_MoveTo (page, pos_x, cls.y() - pos_y)
+        HPDF_Page_LineTo (page, pos_x, cls.y() - pos_y + length)
+        HPDF_Page_Stroke (page)
+        return cls
+
     def dash_line(cls, pos_x, pos_y, length, point, dash, color):
         page = cls.page()
         HPDF_Page_SetDash (page, dash, 1, 1)

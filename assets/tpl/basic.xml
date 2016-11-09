@@ -11,10 +11,10 @@
          landscape="HPDF_PAGE_PORTRAIT" language="JP">
 
         <block position_x="25" position_y="27"
-            width="545" height="25" fill="484848">
+                width="545" height="25" fill="484848">
 
-            <text font="regular" size="16" color="ffffff" align="center" 
-                position_x="0" position_y="47">
+            <text font="regular" size="16" color="ffffff" align="center"
+                    position_x="0" position_y="47">
                 御　請　求　書
             </text>
         </block>
@@ -43,10 +43,7 @@
             </tr>
         </table>
 
-		<!--
-		<draw type="rectangle" position_x="25" position_y="27"
-			 width="545" height="25" color="484848" ><text> test </text>
-		</draw>
-		-->
-	</doc>
+        <table position_x="25" position_y="715" width="540" height="80">
+        </table>
+    </doc>
 </content>
