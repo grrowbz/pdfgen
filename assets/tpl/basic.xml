@@ -24,8 +24,8 @@
             test
         </textarea> 
 
-        <hr position_x="25" position_y="280" width="290" summary="見積り欄" />
-        <hr position_x="25" position_y="282" width="290" summary="見積り欄" />
+        <hr border="1" border_style="double" 
+			position_x="25" position_y="280" width="290" summary="見積り欄" />
 
         <table position_x="25" position_y="302" width="540" height="329">
             <tr height="12">

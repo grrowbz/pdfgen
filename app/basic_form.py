@@ -6,6 +6,7 @@
 import os, sys
 from ctypes import *
 from libharu import *
+from concrete_node_class import CNodeClass
 
 class BasicForm(object):
 
@@ -113,12 +114,11 @@ class BasicForm(object):
 
     ### 線表描画メソッド
     def renderTable(cls, node):
-        tPos    = int(node.attrib['position_x'])
-        yPos = linePos = int(node.attrib['position_y'])
+        nd          = CNodeClass(node)
+        tPos, yPos  = nd.getPosition(node)
+        linePos     = yPos
 
-        cls.draw.rect(  tPos, yPos,\
-                        int(node.attrib['width']),\
-                        int(node.attrib['height']),\
+        cls.draw.rect(  tPos, yPos, nd.width(), nd.height(),
                         1, [0.27, 0.27, 0.27])
 
         ## 列(tr)の処理
