@@ -17,15 +17,21 @@ class BasicForm(object):
     def __init__(self, haru):
 
         self.haru	= haru
-        self.haru.open().page_setsize(HPDF_PAGE_SIZE_A4, HPDF_PAGE_PORTRAIT).mbEnable('JP')
 
         self.draw	= HaruDraw(self.haru)
         self.text	= HaruText(self.haru)
-        font_dir	= os.path.dirname(os.path.realpath(__file__)) + "/../font/"
+
+        #self.haru.open().page_setsize(HPDF_PAGE_SIZE_A4, HPDF_PAGE_PORTRAIT).mbEnable('JP')
+
+        font_dir= os.path.dirname(os.path.realpath(__file__)) + "/../font/"
 
         self.font = {	"Heavy" : font_dir + "GenShinGothic-P-Heavy.ttf",
                         "Regular" : font_dir +"GenShinGothic-P-Regular.ttf",
                         "Bold" : font_dir + "GenShinGothic-P-Bold.ttf"}
+
+        self.render("../assets/tpl/basic.xml")
+
+        """
         ## Header 
         self.draw.rect_with_fill(25, 27, 545, 25, [0.28, 0.28, 0.28])
 
@@ -50,22 +56,6 @@ class BasicForm(object):
         self.draw.rect(25, BoxY, 540, 12, 1, [0.27, 0.27, 0.27])
         self.draw.rect(25, BoxY + 12, 540, BoxHeight, 1, [0.27, 0.27, 0.27])
 
-        self.text.put(u'No').write(32, 312).flush()
-        self.text.put(u'品名及び明細').write(168, 312).flush()
-        self.text.put(u'数量').write(346, 312).flush()
-        self.text.put(u'単位').write(388, 312).flush()
-        self.text.put(u'単価').write(438, 312).flush()
-        self.text.put(u'金額').write(515, 312).flush()
-
-        ItemBoxHeight = BoxHeight + 10
-        ### Item List Box
-        self.draw.rect(25, BoxY, 25, ItemBoxHeight, 1, [0.27, 0.27, 0.27])
-        self.draw.rect(50, BoxY, 280, ItemBoxHeight, 1, [0.27, 0.27, 0.27])
-        self.draw.rect(330, BoxY, 50, ItemBoxHeight, 1, [0.27, 0.27, 0.27])
-        self.draw.rect(380, BoxY, 35, ItemBoxHeight, 1, [0.27, 0.27, 0.27])
-        self.draw.rect(415, BoxY, 65, ItemBoxHeight, 1, [0.27, 0.27, 0.27])
-        self.draw.rect(480, BoxY, 85, ItemBoxHeight, 1, [0.27, 0.27, 0.27])
-
         InfoBoxY  = 630
         BottomBoxHeight = 70
         ### 納品物
@@ -87,12 +77,81 @@ class BasicForm(object):
         self.draw.line(305, InfoBoxY + 46, 260, 1, [0.27, 0.27, 0.27])
         self.draw.line(305, InfoBoxY + 68, 175, 1, [0.27, 0.27, 0.27])
 
-        ### 備考
-        self.draw.rect(25, 715, 540, 100, 1, [0.27, 0.27, 0.27])
-
         ItemBoxY = BoxY + 12
         for var in range(1, 21):
             self.draw.dash_line(25, ItemBoxY + 15 * var, 540, 0.7, [2, 1], [0.3, 0.3, 0.3])
+        """
+
+    def __getPosAttr(cls, node):
+        return [int(node.attrib['position_x']), int(node.attrib['position_y'])]
+
+    def render(cls, xml):
+        import xml.etree.ElementTree as parser
+
+        ### 最上位要素の処理。
+        root    = parser.parse(xml).getroot()
+        for idx,n in enumerate(root):
+            if n.tag == "head": cls.parseHeader(n)
+            elif n.tag == "doc":
+                docIdx = idx
+                cls.haru.open().page_setsize(eval(n.attrib['page_size']), \
+                                             eval(n.attrib['landscape']))\
+                                             .mbEnable(n.attrib['language'])
+
+        ### ドキュメント要素内を処理
+        for e in list(root[docIdx]):
+            if e.tag == "block": pass
+            elif e.tag == "textarea": pass
+            elif e.tag == "table": cls.renderTable(e)
+            elif e.tag == "hr": 
+                xPos, yPos    = cls.__getPosAttr(e)
+                cls.draw.line(xPos, yPos, int(e.attrib['width']), 1, [0.27, 0.27, 0.27])
+
+    def parseHeader(cls, node):
+        for e in list(node):
+            if e.tag == "font": cls.font[e.attrib['name']] = e.attrib['src']
+
+    ### 線表描画メソッド
+    def renderTable(cls, node):
+        tPos    = int(node.attrib['position_x'])
+        yPos = linePos = int(node.attrib['position_y'])
+
+        cls.draw.rect(  tPos, yPos,\
+                        int(node.attrib['width']),\
+                        int(node.attrib['height']),\
+                        1, [0.27, 0.27, 0.27])
+
+        ## 列(tr)の処理
+        for e in list(node):
+            if e.tag == "tr":
+                cls.setFont("Regular",9,[0.25,0.25,0.25])
+                cHeight = int(e.attrib['height'])
+
+                for rl in range(0, int(e.attrib['for'] if 'for' in e.attrib else 1)):
+                    vertPos = tPos
+                    ### td/th の処理
+                    for cell in list(e):
+                        cWidth = int(cell.attrib["width"])
+                        ## --- ヘッダーが(th)の場合の処理
+                        if cell.tag == "th":
+                            ### ヘッダーのテキストを描画
+                            cls.text.put(unicode(cell.text)).\
+                                        write_with_align('center', cWidth,\
+                                        vertPos, yPos + cHeight - 2).flush()
+
+                            cls.draw.rect(  vertPos, linePos, cWidth, cHeight,\
+                                        1, [0.27, 0.27, 0.27])
+                        ## --- ヘッダーthの処理：ここまで
+                        ## --- ヘッダーtdの処理
+                        elif cell.tag == "td":
+                            cls.draw.vline(vertPos, linePos+cHeight, cHeight, 1, [0.27, 0.27, 0.27])
+                            cls.draw.dash_line(vertPos, linePos, cWidth, 0.7, [2, 1], [0.3, 0.3, 0.3])
+                        vertPos += cWidth
+                        ## --- ヘッダーtdの処理：ここまで
+                    else:
+                        linePos += cHeight
+                    ### td/thの処理：ここまで
+        ## 列(tr)の処理：ここまで
 
     def setCompanyInfo(cls):
         ## company information
