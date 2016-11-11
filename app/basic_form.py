@@ -118,6 +118,7 @@ class BasicForm(object):
         tPos, yPos  = nd.getPosition(node)
         linePos     = yPos
 
+        print nd.isExists(['position_x', 'position_y', 'width', 'height'])
         cls.draw.rect(  tPos, yPos, nd.width(), nd.height(),
                         1, [0.27, 0.27, 0.27])
 

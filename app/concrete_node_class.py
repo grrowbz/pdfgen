@@ -14,6 +14,14 @@ class CNodeClass():
         pass
 
     def isExists(cls, attrib_name):
+        if type(attrib_name) == str:
+            return true if attrib_name in cls.node.attrib else false
+        else:
+            for attr_n in attrib_name:
+                continue if attr_n in cls.node.attrib else break
+            else:
+                return true
+            return false
         pass
 
     def x(cls):
