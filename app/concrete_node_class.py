@@ -15,33 +15,41 @@ class CNodeClass():
 
     def isExists(cls, attrib_name):
         if type(attrib_name) == str:
-            return true if attrib_name in cls.node.attrib else false
+            for a in cls.node.attrib:
+                return True if a == attrib_name else False
         else:
-            for attr_n in attrib_name:
-                continue if attr_n in cls.node.attrib else break
+            for a in cls.node.attrib:
+                if a in attrib_name:
+                    print a 
+                    print attrib_name
+                    continue
+                else: break
             else:
-                return true
-            return false
+                return True 
+            return False 
         pass
 
+    def __attribute(cls, attrib_name):
+        return int(cls.node.attrib[attrib_name]) \
+            if attrib_name in cls.node.attrib else false
+
     def x(cls):
-        return self.node.attrib['position_x'] \
-            if 'position_x' in self.node.attrib else false
+        return cls.__attribute('position_x')
 
     def y(cls):
-        return self.node.attrib['position_y'] \
-            if 'position_y' in self.node.attrib else false
+        return cls.__attribute('position_y')
 
     def width(cls):
-        return self.node.attrib['width'] \
-            if 'width' in self.node.attrib else false
+        return cls.__attribute('width')
 
     def height(cls):
-        return self.node.attrib['height'] \
-            if 'height' in self.node.attrib else false
+        return cls.__attribute('height')
+
+    def border(cls):
+        return cls.__attribute('border')
 
     def getPosition(cls):
-        return [cls.x, cls.y]
+        return [cls.x(), cls.y()]
 
     """
     def __init__(cls, haru):

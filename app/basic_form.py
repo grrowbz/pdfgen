@@ -115,12 +115,12 @@ class BasicForm(object):
     ### 線表描画メソッド
     def renderTable(cls, node):
         nd          = CNodeClass(node)
-        tPos, yPos  = nd.getPosition(node)
+        tPos, yPos  = nd.getPosition()
         linePos     = yPos
 
-        print nd.isExists(['position_x', 'position_y', 'width', 'height'])
+        if nd.isExists(['position_x', 'position_y', 'width', 'height', 'border"]):
         cls.draw.rect(  tPos, yPos, nd.width(), nd.height(),
-                        1, [0.27, 0.27, 0.27])
+                        nb.border(), [0.27, 0.27, 0.27])
 
         ## 列(tr)の処理
         for e in list(node):
