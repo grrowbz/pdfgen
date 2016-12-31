@@ -19,13 +19,18 @@
             </text>
         </block>
 
+        <hr border="1" position_x="25" position_y="115" width="240" summary="宛名欄" />
+
         <textarea font="regular" size="9.5" position_x="" position_y="65" 
             color="454545">
             test
         </textarea> 
 
+        <hr border="1" position_x="25" position_y="186" width="290" summary="件名欄" />
+        <hr border="1" position_x="25" position_y="203" width="290" summary="支払期限欄" />
+
         <hr border="1" border_style="double" 
-			position_x="25" position_y="280" width="290" summary="見積り欄" />
+			position_x="25" position_y="280" width="290" summary="合計金額欄" />
 
         <table position_x="25" position_y="302" width="540" height="329">
             <tr height="12">
@@ -48,7 +53,7 @@
 
         <hr position_x="25" position_y="629" width="540" summary="アイテムリストの境界線" />
 
-        <table position_x="25" position_y="715" width="540" height="80">
+        <table position_x="25" position_y="715" width="540" height="120">
         </table>
     </doc>
 </content>

@@ -40,15 +40,7 @@ class PurchaseOrderForm(BasicForm):
         self.text.put(u'納 入 方 式 　 ：').write(25, 217).flush()
         self.text.put(u'支 払 条 件 　 ：').write(25, 235).flush()
 
-    def setClientName(cls, client_name):
-        cls.setFont("Regular", 12,[0.25,0.25,0.25])
-        cls.text.put(u'御中').write(240, 111).flush()
-        cls.setFont("Regular", 14,[0.25,0.25,0.25])
-        cls.text.put(u'株式会社Grrow').write(27, 111).flush()
-
-        cls.setFont("Regular", 12,[0.25,0.25,0.25])
-        length  = cls.haru.getX() - (len(client_name) * 13)
-        cls.text.put(client_name).write(length, 149).flush()
+        self.setCompanyInfo()
 
     ### invoice meta infomation set methods 
     def setProjectNumber(cls, number):

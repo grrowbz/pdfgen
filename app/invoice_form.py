@@ -35,7 +35,7 @@ class InvoiceForm(BasicForm):
 
         ## invoice infomation
         self.setFont("Regular", 9,[0.25,0.25,0.25])
-        self.draw.line(25, 203, 290, 1, [0.27, 0.27, 0.27])
+#        self.draw.line(25, 203, 290, 1, [0.27, 0.27, 0.27])
         self.text.put(u'支 払 期 限 　 ：').write(25, 199).flush()
 
         self.setCompanyInfo()
