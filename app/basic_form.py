@@ -122,7 +122,7 @@ class BasicForm(object):
 		linePos		= yPos
 
 		if not nd.isExists(['position_x', 'position_y', 'width', 'height', 'border']):
-			pass
+			print "not"
 		cls.draw.rect(	tPos, yPos, nd.width(), nd.height(), nd.border(), [0.27, 0.27, 0.27])
 
 		## 列(tr)の処理
