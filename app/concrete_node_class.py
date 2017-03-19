@@ -16,7 +16,9 @@ class CNodeClass():
 	def isExists(cls, attrib_name):
 		if type(attrib_name) == str:
 			for a in cls.node.attrib:
-				return True if a == attrib_name else False
+				if a == attrib_name: return True 
+			else:
+				return False
 		else:
 			for a in cls.node.attrib:
 				if a in attrib_name:
@@ -27,14 +29,16 @@ class CNodeClass():
 			else:
 				return True 
 			return False 
-		pass
 
 	def __getAttrIntValue(cls, attrib_name):
 		return int(cls.node.attrib[attrib_name]) \
 			if attrib_name in cls.node.attrib else False
 
+	### XMLタグ内のプロパティ値（文字列）の取得メソッド
+	### name		__getAttrStrValue
+	### return		unicode string
 	def __getAttrStrValue(cls, attrib_name):
-		return str(cls.node.attrib[attrib_name]) \
+		return unicode(cls.node.attrib[attrib_name]) \
 			if attrib_name in cls.node.attrib else False
 
 	def equalAttrValue(cls, attrib_name, attribute):
@@ -60,6 +64,12 @@ class CNodeClass():
 
 	def getPosition(cls):
 		return [cls.x(), cls.y()]
+
+	def summary(cls):
+		if cls.isExists('summary'):
+			return cls.__getAttrStrValue('summary')
+		else:
+			return False
 
 	"""
 	def __init__(cls, haru):

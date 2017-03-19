@@ -86,6 +86,7 @@ class BasicForm(object):
 	def __getPosAttr(cls, node):
 		return [int(node.attrib['position_x']), int(node.attrib['position_y'])]
 
+	### XMLパーサー。XMLの解析と描画メソッドのコール
 	def render(cls, xml):
 		import xml.etree.ElementTree as parser
 
@@ -102,14 +103,18 @@ class BasicForm(object):
 		### ドキュメント要素内を処理
 		for e in list(root[docIdx]):
 			nd		= CNodeClass(e)
+			print nd.summary()
 			if e.tag == "block": pass
-			elif e.tag == "textarea": pass
+			elif e.tag == "textbox": pass
 			elif e.tag == "table": cls.renderTable(e)
+			### メソッドコールでなくダイレクトに処理
 			elif e.tag == "hr": 
 				xPos, yPos	  = cls.__getPosAttr(e)
 				cls.draw.line(xPos, yPos, int(e.attrib['width']), 1, [0.27, 0.27, 0.27])
 				if nd.equalAttrValue("border_style", "double"):
 					cls.draw.line(xPos, yPos+2, int(e.attrib['width']), 1, [0.27, 0.27, 0.27])
+			else:
+				print "\n<" + e.tag + "> this tag have no parser. Just pass to ignore.\n" 
 
 	def parseHeader(cls, node):
 		for e in list(node):
