@@ -18,6 +18,9 @@ def lambda_handler(event, context):
     module_name = context['template'] + "_form"
     class_name  = ''.join(map(lambda n:n[0].upper() + n[1:], module_name.split("_")))
 
+    ### 対象になるモジュール（請求書や見積書）の呼び出し処理。
+    ### 最終的にはモジュールを適宜変える形ではなく、XMLテンプレートの名称を外から与える
+    ### 形式に変更する。
     ## 無効なモジュール名の呼び出しを検出して、エラーを
     ## 返す処理を前段で入れる 2016/10/31 未実装
     form        = getattr(sys.modules[module_name], class_name)(haru)
@@ -31,6 +34,7 @@ def lambda_handler(event, context):
             print method
     '''
 
+    form.getValueSetter()
     if context['template'] == "invoice":
         form.setProjectNumber(context['project_no'], context['order_no'])
         form.setOrderNumber(context['order_no'])

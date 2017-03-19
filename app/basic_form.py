@@ -7,6 +7,7 @@ import os, sys
 from ctypes import *
 from libharu import *
 from concrete_node_class import CNodeClass
+from value_setter_class import ValueSetterClass
 
 class BasicForm(object):
 
@@ -86,34 +87,100 @@ class BasicForm(object):
 	def __getPosAttr(cls, node):
 		return [int(node.attrib['position_x']), int(node.attrib['position_y'])]
 
+	def getValueSetter(cls):
+		return ValueSetterClass(cls)	
+
+	### XMLパーサー。__renderのラッパー。既に開かれたPDFインスタンスへの上書き処理
+	def overwriteRender(cls, xml):
+		cls.__render(xml)
+
+	### XMLパーサー。__renderのラッパー。初めのharuによるPDFインスタンスの生成を含むparse処理
 	def render(cls, xml):
+		import xml.etree.ElementTree as parser
+
+		root	= parser.parse(xml).getroot()
+		doc		= root.find("doc")
+		cls.haru.open().page_setsize(eval(doc.attrib['page_size']),
+									 eval(doc.attrib['landscape'])).mbEnable(doc.attrib['language'])
+		cls.__render(xml)
+
+	### XMLパーサー。XMLの解析と描画メソッドのコール
+	def __render(cls, xml):
 		import xml.etree.ElementTree as parser
 
 		### 最上位要素の処理。
 		root	= parser.parse(xml).getroot()
 		for idx,n in enumerate(root):
 			if n.tag == "head": cls.parseHeader(n)
-			elif n.tag == "doc":
-				docIdx = idx
-				cls.haru.open().page_setsize(eval(n.attrib['page_size']), \
-											 eval(n.attrib['landscape']))\
-											 .mbEnable(n.attrib['language'])
+			elif n.tag == "doc": docIdx = idx
 
 		### ドキュメント要素内を処理
 		for e in list(root[docIdx]):
-			nd		= CNodeClass(e)
+			nd	= CNodeClass(e)
+			msgLog = "[PARSE INFO] [<" + e.tag + ">]"
+			if nd.isExists("summary"):
+				msgLog += " (summary=" + nd.summary() + ")"
+
 			if e.tag == "block": pass
-			elif e.tag == "textarea": pass
+			elif e.tag == "textarea": cls.renderTextArea(e)
 			elif e.tag == "table": cls.renderTable(e)
+
+			### hrはメソッドコールでなくダイレクトに処理
 			elif e.tag == "hr": 
 				xPos, yPos	  = cls.__getPosAttr(e)
 				cls.draw.line(xPos, yPos, int(e.attrib['width']), 1, [0.27, 0.27, 0.27])
 				if nd.equalAttrValue("border_style", "double"):
 					cls.draw.line(xPos, yPos+2, int(e.attrib['width']), 1, [0.27, 0.27, 0.27])
+			else:
+				msgLog += " this tag have no parser. Just pass to ignore." 
+
+			### デバッグメッセージの表示
+			print msgLog
 
 	def parseHeader(cls, node):
 		for e in list(node):
-			if e.tag == "font": cls.font[e.attrib['name']] = e.attrib['src']
+			nd	= CNodeClass(e)
+
+			if e.tag == "font":
+				cls.font[e.attrib['name']] = {	"src"  : e.attrib['src'],
+												"size" : nd.size() if nd.isExists("size") else False,
+												"color": nd.color() if nd.isExists("color") else False }
+
+	### 文字列（テキスト領域）描画メソッド
+	def renderTextArea(cls, node):
+		nd			= CNodeClass(node)
+		xPos, yPos	= nd.getPosition()
+		font		= cls.font[nd.font()]["src"]
+		size		= nd.fontSize() if nd.isExists('font_size') else cls.font[nd.font()]["size"]
+		font_color	= nd.fontColor() if nd.isExists('font_color') else cls.font[nd.font()]["color"]
+
+		### Borderのカラー設定
+		borderColor		= nd.borderColor() if nd.isExists('border_color') else [0, 0, 0]
+		borderStyle		= nd.borderStyle() if nd.isExists('border_style') else False
+
+		if nd.isExists(['border_top', 'border_bottom']):
+			for attr in node.attrib:
+				if attr == 'border_top': 
+					cls.draw.line(xPos, yPos, nd.width(), nd.borderTop(), borderColor)
+				elif attr == 'border_bottom': 
+					cls.draw.line(xPos, yPos, nd.width(), nd.borderBottom(), borderColor)
+					if borderStyle == "double": 
+						cls.draw.line(xPos, yPos+1, nd.width(), nd.borderTop(), borderColor)
+
+		if nd.isExists(['padding_top', 'padding_bottom']):
+			for attr in node.attrib:
+				if attr == 'padding_top': yPos += nd.paddingTop()
+				elif attr == 'padding_bottom': yPos -= nd.paddingBottom()
+
+		if nd.isExists('auto_reduced'):
+			pass
+
+		cls.text.open_font(font).set_style(size,font_color)
+
+		if nd.isExists('text_align'):
+			cls.text.put(nd.text()).write_with_align(nd.textAlign(), nd.width(), xPos, yPos).flush()
+		else:
+			cls.text.put(nd.text()).write(xPos, yPos).flush()
 
 	### 線表描画メソッド
 	def renderTable(cls, node):
@@ -170,12 +237,12 @@ class BasicForm(object):
 		ADRESS_2		= u'1-9-7 トップルーム品川1015'
 		PHONE_NO		= u'TEL：090-2420-2989'
 
-		cls.text.open_font(cls.font["Bold"]).set_style(16,[0.25,0.25,0.25])
+		cls.text.open_font(cls.font["Bold"]["src"]).set_style(16,[0.25,0.25,0.25])
 		cls.text.put(KABU).write(cls.haru.getX() - 192, 149).flush()
-		cls.text.open_font(cls.font["Bold"]).set_style(19,[0.25,0.25,0.25])
+		cls.text.open_font(cls.font["Bold"]["src"]).set_style(19,[0.25,0.25,0.25])
 		cls.text.put(COMPANY_NAME).write(cls.haru.getX() - 126, 149).flush()
 
-		cls.text.open_font(cls.font["Regular"]).set_style(11,[0.25,0.25,0.25])
+		cls.text.open_font(cls.font["Regular"]["src"]).set_style(11,[0.25,0.25,0.25])
 		cls.text.put(ADRESS_1).write(cls.haru.getX() - 132, 166).flush()
 		cls.text.put(ADRESS_2).write(cls.haru.getX() - 166, 179).flush()
 
@@ -194,16 +261,13 @@ class BasicForm(object):
 		cls.draw.rect(400, 214, 80, 76, 1, [0.27, 0.27, 0.27])
 		cls.draw.rect(480, 214, 80, 76, 1, [0.27, 0.27, 0.27])
 
-	## Font Setting method 
-	def setFont(cls, name, weight, color):
-		cls.text.open_font(cls.font[name]).set_style(weight,color)
-
 	def setCreateDate(cls, date):
 		cls.setFont("Regular",9.5,[0.25,0.25,0.25])
 		cls.text.put(date).write(cls.haru.getX() - 115, 78).flush()
 
 	### client name set method
 	def setClientName(cls, client_name):
+		return True
 		cls.setFont("Regular", 12,[0.25,0.25,0.25])
 		cls.text.put(u'様').write(248, 111).flush()
 		cls.text.put(client_name).setAutoReduce(215).write(27, 111).flush()
@@ -212,6 +276,10 @@ class BasicForm(object):
 	def setTitle(cls, title):
 		cls.setFont("Regular", 9,[0.25,0.25,0.25])
 		cls.text.put(title).write(25 + 65, 182).flush()
+
+	## Font Setting method 
+	def setFont(cls, name, weight, color):
+		cls.text.open_font(cls.font[name]["src"]).set_style(weight,color)
 
 	def setPrice(cls, title, price):
 		subtotal	= int(price)
