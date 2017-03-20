@@ -20,11 +20,11 @@
             </text>
         </block>
 
-        <textarea	font="Regular" font_size="12" summary="宛名欄"
-					position_x="25" position_y="90" width="250" height="20"
-					padding_bottom="4" border_bottom="1" border_color="666666"
-					auto_reduced="True" text_align="right">
-			様
+        <textarea	font="Regular" font_size="12" summary="宛名欄" width="250" height="20"
+					position_x="25" position_y="90" padding_bottom="4" border_bottom="1" 
+					border_color="666666" auto_reduced="True" text_align="right">
+			<placeholder name="client_name" type="string" />
+			<text>様</text>
 		</textarea> 
 
 		<pr></pr>

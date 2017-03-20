@@ -1,7 +1,7 @@
 *.py[cod]
-
+.DS_Store
 /tmp/*
 /app/haru/*
 .python-version
-.swp
+*.swp
 !.gitkeep
