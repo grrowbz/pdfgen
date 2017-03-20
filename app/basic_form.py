@@ -15,13 +15,14 @@ class BasicForm(object):
 	text		= ""
 	draw		= ""
 	font		= ""
+	setter		= ""
 
 	def __init__(self, haru):
 
 		self.haru	= haru
-
 		self.draw	= HaruDraw(self.haru)
 		self.text	= HaruText(self.haru)
+		self.setter	= ValueSetterClass(self)	
 
 		#self.haru.open().page_setsize(HPDF_PAGE_SIZE_A4, HPDF_PAGE_PORTRAIT).mbEnable('JP')
 
@@ -88,7 +89,11 @@ class BasicForm(object):
 		return [int(node.attrib['position_x']), int(node.attrib['position_y'])]
 
 	def getValueSetter(cls):
-		return ValueSetterClass(cls)	
+		return cls.setter
+
+	def renderPlaceHolder(cls, ph, ctx):
+		cls.text.open_font(ph['font']).set_style(ph['size'],ph['color'])
+		cls.text.put(ctx).write(ph['x'], ph['y']).flush()
 
 	### XMLパーサー。__renderのラッパー。既に開かれたPDFインスタンスへの上書き処理
 	def overwriteRender(cls, xml):
@@ -148,6 +153,7 @@ class BasicForm(object):
 
 	### 文字列（テキスト領域）描画メソッド
 	def renderTextArea(cls, node):
+		setter		= cls.setter
 		nd			= CNodeClass(node)
 		xPos, yPos	= nd.getPosition()
 		font		= cls.font[nd.font()]["src"]
@@ -181,6 +187,11 @@ class BasicForm(object):
 			cls.text.put(nd.text()).write_with_align(nd.textAlign(), nd.width(), xPos, yPos).flush()
 		else:
 			cls.text.put(nd.text()).write(xPos, yPos).flush()
+
+		for e in node:
+			if e.tag == 'placeholder':
+				pNode	= CNodeClass(e)
+				setter.setPlaceHolder(pNode.name(), xPos, yPos, nd.width(), pNode.type(), font, size, font_color)
 
 	### 線表描画メソッド
 	def renderTable(cls, node):

@@ -19,16 +19,17 @@
 
 		<textarea	font="Small" position_x="25" position_y="165" width="290" height="17"
 					summary="納入期限欄" padding_bottom="4" border_bottom="1" border_color="666666">
-			納 入 期 限 　 ：
-		</textarea>_↲
+			<text>納 入 期 限 　 ：</text>
+			<placeholder name="delivery_deadline" type="string" />
+		</textarea>
 		<textarea	font="Small" position_x="25" position_y="182" width="290" height="17"
 					summary="納入方式欄" padding_bottom="4" border_bottom="1" border_color="666666">
 			納 入 方 式 　 ：
-		</textarea>_↲
+		</textarea>
 		<textarea	font="Small" position_x="25" position_y="199" width="290" height="17"
 					summary="御支払条件" padding_bottom="4" border_bottom="1" border_color="666666">
 			御 支 払 条 件 ：
-		</textarea>_↲
+		</textarea>
 
     </doc>
 </content>

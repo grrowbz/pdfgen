@@ -10,7 +10,7 @@ from libharu import *
 class ValueSetterClass(object):
 
 	parser		= ""
-	text		= ""
+	pHolder		= {} 
 	draw		= ""
 	font		= ""
 
@@ -18,4 +18,8 @@ class ValueSetterClass(object):
 
 		self.parser	= parser
 
+	def setPlaceHolder(cls,name, x, y, width, type, font, size, font_color):
+		cls.pHolder[name]	= { "x": x, "y": y, "width": width, "type": type, "font": font, "size": size, "color": font_color }
 
+	def getPlaceHolder(cls, name):
+		return cls.pHolder[name]

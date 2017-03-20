@@ -99,6 +99,9 @@ class CNodeClass():
 				[color_code[(idx-1):idx+1] for idx in range(len(color_code)) if idx % 2 ])
 		return color
 
+	def name(cls): return cls.__getExtraAttrValue("str", 'name')
+	def type(cls): return cls.__getExtraAttrValue("str", 'type')
+
 	def border(cls): return cls.__getExtraAttrValue("int", 'border')
 	def borderStyle(cls): return cls.__getExtraAttrValue("str", 'border_style')
 	def borderBottom(cls): return cls.__getExtraAttrValue("int", 'border_bottom')
@@ -110,17 +113,4 @@ class CNodeClass():
 	def textAlign(cls): return cls.__getExtraAttrValue("str", 'text_align')
 	def paddingBottom(cls): return cls.__getExtraAttrValue("int", 'padding_bottom')
 	def paddingTop(cls): return cls.__getExtraAttrValue("int", 'padding_top')
-
-	"""
-	def __init__(cls, haru):
-		SuperHaruObject.__init__(cls, haru)
-		pass
-
-	def put_image(cls, fname, x, y, width, height):
-		__pdf	= cls.pdf()
-		image	= HPDF_LoadPngImageFromFile (__pdf, fname)
-
-		HPDF_Page_DrawImage (cls.page(), image, x, y, width, height)
-		return cls
-	"""
 
