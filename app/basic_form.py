@@ -7,6 +7,7 @@ import os, sys
 from ctypes import *
 from libharu import *
 from concrete_node_class import CNodeClass
+from value_setter_class import ValueSetterClass
 
 class BasicForm(object):
 
@@ -85,6 +86,9 @@ class BasicForm(object):
 
 	def __getPosAttr(cls, node):
 		return [int(node.attrib['position_x']), int(node.attrib['position_y'])]
+
+	def getValueSetter(cls):
+		return ValueSetterClass(cls)	
 
 	### XMLパーサー。__renderのラッパー。既に開かれたPDFインスタンスへの上書き処理
 	def overwriteRender(cls, xml):
