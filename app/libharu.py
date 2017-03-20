@@ -194,7 +194,6 @@ class HaruText(SuperHaruObject):
 
     def write_with_align(cls, pos, width, x, y, _indent = 0):
         char_w = HPDF_Page_TextWidth(cls.page(), ''.join(cls.__text))
-
         if pos in ["center","CENTER"]:
             cls.write(x + (width - char_w) / 2, y)	
         elif pos in ["right", "RIGHT"]:

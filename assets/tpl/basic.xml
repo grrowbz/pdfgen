@@ -3,7 +3,8 @@
 
 <content name="帳票基準テンプレート">
     <head>
-        <font name="Regular" src="../font/GenShinGothic-P-Regular.ttf" />
+        <font name="Regular" size="9.5" color="333333" src="../font/GenShinGothic-P-Regular.ttf" />
+        <font name="Small" size="9" color="333333" src="../font/GenShinGothic-P-Regular.ttf" />
         <font name="Bold" src="../font/GenShinGothic-P-Bold.ttf" />
         <font name="Heavy" src="../font/GenShinGothic-P-Heavy.ttf" />
     </head>
@@ -19,21 +20,28 @@
             </text>
         </block>
 
-        <hr border="1" position_x="25" position_y="115" width="240" summary="宛名欄" />
+        <textarea	font="Regular" font_size="12" summary="宛名欄"
+					position_x="25" position_y="90" width="250" height="20"
+					padding_bottom="4" border_bottom="1" border_color="666666"
+					auto_reduced="True" text_align="right">
+			様
+		</textarea> 
 
 		<pr></pr>
-        <textbox font="regular" size="9.5" position_x="" position_y="65" 
-            color="454545">
-            test
-        </textbox> 
+        <textarea font="Regular" position_x="438" position_y="78" summary="作成日">作成日：</textarea> 
+        <textarea	font="Small" position_x="25" position_y="148" width="290" height="17"
+					summary="件名欄" padding_bottom="4" border_bottom="1" border_color="666666">
+			件 　 名 　 　 ：
+		</textarea> 
 
-        <hr border="1" position_x="25" position_y="186" width="290" summary="件名欄" />
-        <hr border="1" position_x="25" position_y="203" width="290" summary="支払期限欄" />
+        <textarea	font="Regular" font_size="13" summary="合計金額欄"
+					position_x="25" position_y="234" width="290" height="20"
+					padding_bottom="4" border_bottom="1" border_color="666666"
+					border_style="double">
+			お見積金額（税込）
+		</textarea> 
 
-        <hr border="1" border_style="double" 
-			position_x="25" position_y="280" width="290" summary="合計金額欄" />
-
-        <table position_x="25" position_y="302" width="540" height="329">
+        <table position_x="25" position_y="254" width="540" height="389">
             <tr height="12">
                 <th width="25">No</th>
                 <th width="280">商品及び明細</th>
@@ -42,7 +50,7 @@
                 <th width="65">単価</th>
                 <th width="85">金額</th>
             </tr>
-            <tr height="15" border="dash" for="21">
+            <tr height="15" border="dash" for="25">
                 <td width="25"></td>
                 <td width="280"></td>
                 <td width="50"></td>
@@ -52,7 +60,7 @@
             </tr>
         </table>
 
-        <hr position_x="25" position_y="629" width="540" summary="アイテムリストの境界線" />
+	<hr position_x="25" position_y="641" width="540" summary="アイテムリストの境界線" />
 
         <table position_x="25" position_y="715" width="540" height="120">
         </table>
