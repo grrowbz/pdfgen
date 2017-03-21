@@ -151,27 +151,31 @@ class BasicForm(object):
 												"size" : nd.size() if nd.isExists("size") else False,
 												"color": nd.color() if nd.isExists("color") else False }
 
+	#### 属性値:border、border_style、border_colorの処理
+	def __attribBorder(cls, _nd, x, y):
+
+		### Borderのカラー設定
+		_color	= _nd.borderColor() if _nd.isExists('border_color') else [0, 0, 0]
+		_style	= _nd.borderStyle() if _nd.isExists('border_style') else False
+
+		if _nd.isExists(['border_top', 'border_bottom']):
+			for attr in node.attrib:
+				### border_topの場合、yPosから高さ分引く必要がある。
+				if attr == 'border_top': 
+					cls.draw.line(x, y, _nd.width(), _nd.borderTop(), _color)
+				elif attr == 'border_bottom': 
+					cls.draw.line(x, y, _nd.width(), _nd.borderBottom(), _color)
+					if _style == "double":
+						cls.draw.line(x, y+1, _nd.width(), _nd.borderTop(), _color)
+
 	### 文字列（テキスト領域）描画メソッド
 	def renderTextArea(cls, node):
 		setter		= cls.setter
 		nd			= CNodeClass(node)
 		xPos, yPos	= nd.getPosition()
-		font		= cls.font[nd.font()]["src"]
-		size		= nd.fontSize() if nd.isExists('font_size') else cls.font[nd.font()]["size"]
-		font_color	= nd.fontColor() if nd.isExists('font_color') else cls.font[nd.font()]["color"]
 
-		### Borderのカラー設定
-		borderColor		= nd.borderColor() if nd.isExists('border_color') else [0, 0, 0]
-		borderStyle		= nd.borderStyle() if nd.isExists('border_style') else False
-
-		if nd.isExists(['border_top', 'border_bottom']):
-			for attr in node.attrib:
-				if attr == 'border_top': 
-					cls.draw.line(xPos, yPos, nd.width(), nd.borderTop(), borderColor)
-				elif attr == 'border_bottom': 
-					cls.draw.line(xPos, yPos, nd.width(), nd.borderBottom(), borderColor)
-					if borderStyle == "double": 
-						cls.draw.line(xPos, yPos+1, nd.width(), nd.borderTop(), borderColor)
+		### attribute border process
+		cls.__attribBorder(nd, xPos, yPos)
 
 		if nd.isExists(['padding_top', 'padding_bottom']):
 			for attr in node.attrib:
@@ -181,7 +185,11 @@ class BasicForm(object):
 		if nd.isExists('auto_reduced'):
 			pass
 
-		cls.text.open_font(font).set_style(size,font_color)
+		font			= cls.font[nd.font()]["src"]
+		font_size		= nd.fontSize() if nd.isExists('font_size') else cls.font[nd.font()]["size"]
+		font_color		= nd.fontColor() if nd.isExists('font_color') else cls.font[nd.font()]["color"]
+
+		cls.text.open_font(font).set_style(font_size,font_color)
 
 		if nd.isExists('text_align'):
 			cls.text.put(nd.text()).write_with_align(nd.textAlign(), nd.width(), xPos, yPos).flush()
@@ -191,7 +199,7 @@ class BasicForm(object):
 		for e in node:
 			if e.tag == 'placeholder':
 				pNode	= CNodeClass(e)
-				setter.setPlaceHolder(pNode.name(), xPos, yPos, nd.width(), pNode.type(), font, size, font_color)
+				setter.setPlaceHolder(pNode.name(), xPos, yPos, nd.width(), pNode.type(), font, font_size, font_color)
 
 	### 線表描画メソッド
 	def renderTable(cls, node):
