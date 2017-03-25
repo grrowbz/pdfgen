@@ -53,7 +53,8 @@ class CNodeClass():
 		return False
 	
 	def text(cls):
-		text	= cls.node.text
+		for e in cls.node.findall('./text'):
+			print e.text
 		retVal	= list()
 		strArry = re.split("\\n", text.encode("utf-8"))
 		if len(strArry) > 1:
