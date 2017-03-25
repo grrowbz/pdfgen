@@ -16,15 +16,32 @@ class CNodeClass():
 			self.attrib.append(attrib)
 
 	### 属性値の存在確認メソッド。
+	### 全ての属性値が含まれていればTrue
 	def isExists(cls, attrib_name):
+		return cls._exists(attrib_name, 'all')
+
+	### 属性値の存在確認メソッド。
+	### 一つでも含まれる属性値があればtrue
+	def hasExists(cls, attrib_name):
+		return cls._exists(attrib_name, 'has')
+		
+	def _exists(cls, attrib_name, mode):
 		if type(attrib_name) == list:
-			for a in attrib_name:
-				## attrib_name内の要素を全てチェック。
-				if a not in cls.getAttrib(): return False 
-			else:
-				return True
+			if mode == 'all':
+				for a in attrib_name:
+					## attrib_name内の要素を全てチェック。
+					if a not in cls.getAttrib(): return False 
+				else:
+					return True
+			elif mode == 'has':
+				for a in attrib_name:
+					## attrib_name内の要素を全てチェック。
+					if a in cls.getAttrib(): return True
+				else:
+					return False
 		else:
 			return attrib_name in cls.getAttrib()
+		
 
 	def getAttrib(cls):
 		return cls.attrib

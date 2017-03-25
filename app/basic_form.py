@@ -158,8 +158,8 @@ class BasicForm(object):
 		_color	= _nd.borderColor() if _nd.isExists('border_color') else [0, 0, 0]
 		_style	= _nd.borderStyle() if _nd.isExists('border_style') else False
 
-		if _nd.isExists(['border_top', 'border_bottom']):
-			for attr in node.attrib:
+		if _nd.hasExists(['border_top', 'border_bottom']):
+			for attr in _nd.getAttrib():
 				### border_topの場合、yPosから高さ分引く必要がある。
 				if attr == 'border_top': 
 					cls.draw.line(x, y, _nd.width(), _nd.borderTop(), _color)
@@ -177,7 +177,7 @@ class BasicForm(object):
 		### attribute border process
 		cls.__attribBorder(nd, xPos, yPos)
 
-		if nd.isExists(['padding_top', 'padding_bottom']):
+		if nd.hasExists(['padding_top', 'padding_bottom']):
 			for attr in node.attrib:
 				if attr == 'padding_top': yPos += nd.paddingTop()
 				elif attr == 'padding_bottom': yPos -= nd.paddingBottom()
