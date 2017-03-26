@@ -20,11 +20,16 @@
             </text>
         </block>
 
+        <textarea	font="Small" summary="作成日" width="30" height="12"
+					position_x="445" position_y="78">
+			<text text_align="right">作成日：</text>
+		</textarea> 
+
         <textarea	font="Regular" font_size="12" summary="宛名欄" width="250" height="20"
 					position_x="25" position_y="90" padding_bottom="4" border_bottom="1" 
-					border_color="666666" auto_reduced="True" text_align="right">
+					border_color="666666" auto_reduced="True">
 			<placeholder name="client_name" type="string" />
-			<text>様</text>
+			<text text_align="right">様</text>
 		</textarea> 
 
 		<pr></pr>
@@ -32,7 +37,7 @@
         <textarea	font="Small" position_x="25" position_y="148" width="290" height="17"
 					summary="件名欄" padding_bottom="4" border_bottom="1" border_color="666666">
 			<text>件 　 名 　 　 ：</text>
-			<placeholder name="client_name" type="string" />
+			<placeholder name="title" type="string" />
 		</textarea> 
 
         <textarea	font="Regular" font_size="13" summary="合計金額欄"
@@ -40,7 +45,7 @@
 					padding_bottom="4" border_bottom="1" border_color="666666"
 					border_style="double">
 			<text>お見積金額（税込）</text>
-			<placeholder name="client_name" type="string" />
+			<!-- <placeholder name="estimate_total" type="string" /> -->
 		</textarea> 
 
         <table position_x="25" position_y="254" width="540" height="389">

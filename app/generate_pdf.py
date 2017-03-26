@@ -34,8 +34,9 @@ def lambda_handler(event, context):
 		    print method
 	''' 
 	setter		= form.getValueSetter()
-	ctx_name	= 'client_name'
-	form.renderPlaceHolder(setter.getPlaceHolder(ctx_name), context[ctx_name])
+
+	for name in setter.getPlaceHolderKeys():
+		form.renderPlaceHolder(setter.getPlaceHolder(name), context[name])
 
 
 	if context['template'] == "invoice":
@@ -45,18 +46,12 @@ def lambda_handler(event, context):
 		form.setProjectNumber(context['project_no'])
 
 	if context['template'] in ["estimate", "purchase_order"]:
-		ctx_name	= 'delivery_deadline'
-		form.renderPlaceHolder(setter.getPlaceHolder(ctx_name), context[ctx_name])
-
-		form.setDeliveryDeadline(context['delivery_deadline'])
-		form.setDeliveryMethod(context['delivery_method'])
-		form.setPaymentTerms(context['payment_terms'])
+		pass
 	elif context['template'] == "invoice":
-		form.setTermLimit(context['term_limit'])
+		pass
+		## form.setTermLimit(context['term_limit'])
  
-	form.setCreateDate(context['create_date'])
-	form.setTitle(context['title'])
-
+	## form.setCreateDate(context['create_date'])
 	form.setDeliverables(context['deliverables'])
 	form.setRemarksColumn(context['remarks_column'])
 
