@@ -31,6 +31,7 @@ function export_pdf(url, post_data) {
             var file = new Blob([response_data], {type: 'application/pdf'});
             var url = URL.createObjectURL(file);
             w.location.href = url;
+			w.document.title = "テスト"
             w.revokeObjectURL(url);
         };
     };

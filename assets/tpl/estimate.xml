@@ -11,7 +11,10 @@
     <doc page_size="HPDF_PAGE_SIZE_A4"
          landscape="HPDF_PAGE_PORTRAIT" language="JP">
 
-		<textarea font="Regular" position_x="435" position_y="65" summary="見積No">見積No：</textarea> 
+		<textarea	font="Small" summary="作成日" width="30" height="12" 
+					position_x="445" position_y="65">
+				<text text_align="right">見積No：</text>
+		</textarea>
 		<textarea font="Regular" position_x="25" position_y="112" summary="見積りのご案内">
 			<text>下記の通りお見積り致しますので、</text>
 			<text>よろしくお願い申し上げます。</text>

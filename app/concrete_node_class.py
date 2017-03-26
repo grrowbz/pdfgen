@@ -42,9 +42,11 @@ class CNodeClass():
 		else:
 			return attrib_name in cls.getAttrib()
 		
-
 	def getAttrib(cls):
 		return cls.attrib
+
+	def getChildNodes(cls):
+		return list(cls.node)
 
 	def equalAttrValue(cls, attrib_name, attribute):
 		if cls.isExists(attrib_name):
@@ -53,8 +55,7 @@ class CNodeClass():
 		return False
 	
 	def text(cls):
-		for e in cls.node.findall('./text'):
-			print e.text
+		text	= cls.node.text
 		retVal	= list()
 		strArry = re.split("\\n", text.encode("utf-8"))
 		if len(strArry) > 1:

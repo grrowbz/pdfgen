@@ -21,5 +21,8 @@ class ValueSetterClass(object):
 	def setPlaceHolder(cls,name, x, y, width, type, font, size, font_color):
 		cls.pHolder[name]	= { "x": x, "y": y, "width": width, "type": type, "font": font, "size": size, "color": font_color }
 
+	def getPlaceHolderKeys(cls):
+		return cls.pHolder.keys()
+
 	def getPlaceHolder(cls, name):
 		return cls.pHolder[name]

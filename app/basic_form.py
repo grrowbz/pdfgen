@@ -14,8 +14,9 @@ class BasicForm(object):
 	haru		= ""
 	text		= ""
 	draw		= ""
-	font		= ""
+	font		= {}
 	setter		= ""
+	textdata	= {}
 
 	def __init__(self, haru):
 
@@ -23,41 +24,11 @@ class BasicForm(object):
 		self.draw	= HaruDraw(self.haru)
 		self.text	= HaruText(self.haru)
 		self.setter	= ValueSetterClass(self)	
-
-		#self.haru.open().page_setsize(HPDF_PAGE_SIZE_A4, HPDF_PAGE_PORTRAIT).mbEnable('JP')
-
-		font_dir= os.path.dirname(os.path.realpath(__file__)) + "/../font/"
-
-		self.font = {	"Heavy" : font_dir + "GenShinGothic-P-Heavy.ttf",
-						"Regular" : font_dir +"GenShinGothic-P-Regular.ttf",
-						"Bold" : font_dir + "GenShinGothic-P-Bold.ttf"}
-
 		self.render("../assets/tpl/basic.xml")
 
 		"""
 		## Header 
 		self.draw.rect_with_fill(25, 27, 545, 25, [0.28, 0.28, 0.28])
-
-		## invoice meta information
-		self.setFont("Regular", 9.5, [0.25,0.25,0.25])
-		self.text.put(u'作成日：').write(self.haru.getX() - 156, 78).flush()
-
-		self.draw.line(25, 115, 240, 1, [0.27, 0.27, 0.27])
-
-		## project infomation
-		self.setFont("Regular",9,[0.25,0.25,0.25])
-		self.draw.line(25, 186, 290, 1, [0.27, 0.27, 0.27])
-		self.text.put(u'件 　 名 　 　 ：').write(25, 182).flush()
-
-		self.draw.line(25, 280, 290, 1, [0.27, 0.27, 0.27])
-		self.draw.line(25, 282, 290, 1, [0.27, 0.27, 0.27])
-
-		BoxY = 302
-		BoxHeight = 318
-		### Item title box
-		self.setFont("Regular",9,[0.25,0.25,0.25])
-		self.draw.rect(25, BoxY, 540, 12, 1, [0.27, 0.27, 0.27])
-		self.draw.rect(25, BoxY + 12, 540, BoxHeight, 1, [0.27, 0.27, 0.27])
 
 		InfoBoxY  = 630
 		BottomBoxHeight = 70
@@ -95,18 +66,29 @@ class BasicForm(object):
 		cls.text.open_font(ph['font']).set_style(ph['size'],ph['color'])
 		cls.text.put(ctx).write(ph['x'], ph['y']).flush()
 
-	### XMLパーサー。__renderのラッパー。既に開かれたPDFインスタンスへの上書き処理
-	def overwriteRender(cls, xml):
-		cls.__render(xml)
+	##################################
+	#### renderメソッド系
+	#################################
+
+	def parseHeader(cls, node):
+		for e in list(node):
+			nd	= CNodeClass(e)
+			if e.tag == "font":
+				cls.font[e.attrib['name']] = {	"src"  : e.attrib['src'],
+												"size" : nd.size() if nd.isExists("size") else False,
+												"color": nd.color() if nd.isExists("color") else False }
 
 	### XMLパーサー。__renderのラッパー。初めのharuによるPDFインスタンスの生成を含むparse処理
 	def render(cls, xml):
 		import xml.etree.ElementTree as parser
-
 		root	= parser.parse(xml).getroot()
 		doc		= root.find("doc")
 		cls.haru.open().page_setsize(eval(doc.attrib['page_size']),
 									 eval(doc.attrib['landscape'])).mbEnable(doc.attrib['language'])
+		cls.__render(xml)
+
+	### XMLパーサー。__renderのラッパー。既に開かれたPDFインスタンスへの上書き処理
+	def overwriteRender(cls, xml):
 		cls.__render(xml)
 
 	### XMLパーサー。XMLの解析と描画メソッドのコール
@@ -142,15 +124,6 @@ class BasicForm(object):
 			### デバッグメッセージの表示
 			print msgLog
 
-	def parseHeader(cls, node):
-		for e in list(node):
-			nd	= CNodeClass(e)
-
-			if e.tag == "font":
-				cls.font[e.attrib['name']] = {	"src"  : e.attrib['src'],
-												"size" : nd.size() if nd.isExists("size") else False,
-												"color": nd.color() if nd.isExists("color") else False }
-
 	#### 属性値:border、border_style、border_colorの処理
 	def __attribBorder(cls, _nd, x, y):
 
@@ -166,11 +139,26 @@ class BasicForm(object):
 				elif attr == 'border_bottom': 
 					cls.draw.line(x, y, _nd.width(), _nd.borderBottom(), _color)
 					if _style == "double":
-						cls.draw.line(x, y+1, _nd.width(), _nd.borderTop(), _color)
+						cls.draw.line(x, y+2, _nd.width(), _nd.borderTop(), _color)
+
+	def __childNodeParser(cls, _nd, x, y, font, font_size,font_color):
+		setter		= cls.setter
+
+		for e in _nd.getChildNodes():
+			if e.tag == "text":
+				cN	= CNodeClass(e)
+				if cN.isExists('text_align'):
+					cls.text.put(cN.text()).write_with_align(cN.textAlign(), _nd.width(), x, y).flush()
+				else:
+					cls.text.put(cN.text()).write(x, y).flush()
+				x += cls.text.put_with_width(cN.text())
+				cls.text.flush()
+			elif e.tag == 'placeholder':
+				cN	= CNodeClass(e)
+				setter.setPlaceHolder(cN.name(), x, y, _nd.width(), cN.type(), font, font_size, font_color)
 
 	### 文字列（テキスト領域）描画メソッド
 	def renderTextArea(cls, node):
-		setter		= cls.setter
 		nd			= CNodeClass(node)
 		xPos, yPos	= nd.getPosition()
 
@@ -190,16 +178,7 @@ class BasicForm(object):
 		font_color		= nd.fontColor() if nd.isExists('font_color') else cls.font[nd.font()]["color"]
 
 		cls.text.open_font(font).set_style(font_size,font_color)
-
-		if nd.isExists('text_align'):
-			cls.text.put(nd.text()).write_with_align(nd.textAlign(), nd.width(), xPos, yPos).flush()
-		else:
-			cls.text.put(nd.text()).write(xPos, yPos).flush()
-
-		for e in node:
-			if e.tag == 'placeholder':
-				pNode	= CNodeClass(e)
-				setter.setPlaceHolder(pNode.name(), xPos, yPos, nd.width(), pNode.type(), font, font_size, font_color)
+		cls.__childNodeParser(nd, xPos, yPos, font, font_size, font_color)
 
 	### 線表描画メソッド
 	def renderTable(cls, node):
