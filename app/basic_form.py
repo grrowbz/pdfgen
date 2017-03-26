@@ -17,6 +17,7 @@ class BasicForm(object):
 	font		= {}
 	setter		= ""
 	textdata	= {}
+	cursor		= []
 
 	def __init__(self, haru):
 
@@ -55,6 +56,14 @@ class BasicForm(object):
 		for var in range(1, 21):
 			self.draw.dash_line(25, ItemBoxY + 15 * var, 540, 0.7, [2, 1], [0.3, 0.3, 0.3])
 		"""
+
+	def setCursor(cls, x, y):
+		cls.cursor[0] = x
+		cls.cursor[1] = y
+		return cls
+
+	def getCursor(cls, pos = None ):
+		return cls.cursor
 
 	def __getPosAttr(cls, node):
 		return [int(node.attrib['position_x']), int(node.attrib['position_y'])]
@@ -160,7 +169,7 @@ class BasicForm(object):
 	### 文字列（テキスト領域）描画メソッド
 	def renderTextArea(cls, node):
 		nd			= CNodeClass(node)
-		xPos, yPos	= nd.getPosition()
+		xPos, yPos	= cls.setCursor(nd.getPosition()).getCursor()
 
 		### attribute border process
 		cls.__attribBorder(nd, xPos, yPos)

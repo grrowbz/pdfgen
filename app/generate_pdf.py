@@ -48,11 +48,10 @@ def lambda_handler(event, context):
 	if context['template'] in ["estimate", "purchase_order"]:
 		pass
 	elif context['template'] == "invoice":
-		form.setTermLimit(context['term_limit'])
+		pass
+		## form.setTermLimit(context['term_limit'])
  
-	form.setCreateDate(context['create_date'])
-	form.setTitle(context['title'])
-
+	## form.setCreateDate(context['create_date'])
 	form.setDeliverables(context['deliverables'])
 	form.setRemarksColumn(context['remarks_column'])
 
