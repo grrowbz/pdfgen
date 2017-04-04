@@ -4,6 +4,7 @@
 #
 
 import os, sys
+from collections import namedtuple
 from ctypes import *
 from libharu import *
 from concrete_node_class import CNodeClass
@@ -17,7 +18,7 @@ class BasicForm(object):
 	font		= {}
 	setter		= ""
 	textdata	= {}
-	cursor		= []
+	cursor		= ""
 
 	def __init__(self, haru):
 
@@ -57,13 +58,14 @@ class BasicForm(object):
 			self.draw.dash_line(25, ItemBoxY + 15 * var, 540, 0.7, [2, 1], [0.3, 0.3, 0.3])
 		"""
 
-	def setCursor(cls, x, y):
-		cls.cursor[0] = x
-		cls.cursor[1] = y
+	def setCursor(cls, *args):
+		position	= args
+		if len(args) < 2: position	= args[0]
+		cls.cursor	= (position[0], position[1]) 
 		return cls
 
 	def getCursor(cls, pos = None ):
-		return cls.cursor
+		return cls.cursor[0], cls.cursor[1]
 
 	def __getPosAttr(cls, node):
 		return [int(node.attrib['position_x']), int(node.attrib['position_y'])]
@@ -115,7 +117,7 @@ class BasicForm(object):
 			nd	= CNodeClass(e)
 			msgLog = "[PARSE INFO] [<" + e.tag + ">]"
 			if nd.isExists("summary"):
-				msgLog += " (summary=" + nd.summary() + ")"
+				msgLog +=" (summary=" + nd.summary() + ")"
 
 			if e.tag == "block": pass
 			elif e.tag == "textarea": cls.renderTextArea(e)
