@@ -4,6 +4,7 @@
 #
 
 import os, sys
+from collections import namedtuple
 from ctypes import *
 from libharu import *
 from concrete_node_class import CNodeClass
@@ -17,7 +18,7 @@ class BasicForm(object):
 	font		= {}
 	setter		= ""
 	textdata	= {}
-	cursor		= []
+	cursor		= ""
 
 	def __init__(self, haru):
 
@@ -25,6 +26,8 @@ class BasicForm(object):
 		self.draw	= HaruDraw(self.haru)
 		self.text	= HaruText(self.haru)
 		self.setter	= ValueSetterClass(self)	
+		Cursor		= namedtuple('cursor', 'x y')
+		self.cursor	= Cursor(0,0)
 		self.render("../assets/tpl/basic.xml")
 
 		"""
@@ -57,10 +60,9 @@ class BasicForm(object):
 			self.draw.dash_line(25, ItemBoxY + 15 * var, 540, 0.7, [2, 1], [0.3, 0.3, 0.3])
 		"""
 
-	def setCursor(cls, x, y):
-		cls.cursor[0] = x
-		cls.cursor[1] = y
-		return cls
+	def setCursor(cls, x):
+		cls.cursor(x[0], x[1]) 
+		return cls.getCursor
 
 	def getCursor(cls, pos = None ):
 		return cls.cursor
