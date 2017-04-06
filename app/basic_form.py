@@ -26,8 +26,6 @@ class BasicForm(object):
 		self.draw	= HaruDraw(self.haru)
 		self.text	= HaruText(self.haru)
 		self.setter	= ValueSetterClass(self)	
-		Cursor		= namedtuple('cursor', 'x y')
-		self.cursor	= Cursor(0,0)
 		self.render("../assets/tpl/basic.xml")
 
 		"""
@@ -60,12 +58,14 @@ class BasicForm(object):
 			self.draw.dash_line(25, ItemBoxY + 15 * var, 540, 0.7, [2, 1], [0.3, 0.3, 0.3])
 		"""
 
-	def setCursor(cls, x):
-		cls.cursor(x[0], x[1]) 
-		return cls.getCursor
+	def setCursor(cls, *args):
+		position	= args
+		if len(args) < 2: position	= args[0]
+		cls.cursor	= (position[0], position[1]) 
+		return cls
 
 	def getCursor(cls, pos = None ):
-		return cls.cursor
+		return cls.cursor[0], cls.cursor[1]
 
 	def __getPosAttr(cls, node):
 		return [int(node.attrib['position_x']), int(node.attrib['position_y'])]
@@ -117,7 +117,7 @@ class BasicForm(object):
 			nd	= CNodeClass(e)
 			msgLog = "[PARSE INFO] [<" + e.tag + ">]"
 			if nd.isExists("summary"):
-				msgLog += " (summary=" + nd.summary() + ")"
+				msgLog +=" (summary=" + nd.summary() + ")"
 
 			if e.tag == "block": pass
 			elif e.tag == "textarea": cls.renderTextArea(e)

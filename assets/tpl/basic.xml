@@ -2,25 +2,25 @@
 <!-- vim:set ts=4 fenc=utf-8: -->
 
 <content name="帳票基準テンプレート">
-    <head>
-        <font name="Regular" size="9.5" color="333333" src="../font/GenShinGothic-P-Regular.ttf" />
-        <font name="Small" size="9" color="333333" src="../font/GenShinGothic-P-Regular.ttf" />
-        <font name="Bold" src="../font/GenShinGothic-P-Bold.ttf" />
-        <font name="Heavy" src="../font/GenShinGothic-P-Heavy.ttf" />
-    </head>
-    <doc page_size="HPDF_PAGE_SIZE_A4"
-         landscape="HPDF_PAGE_PORTRAIT" language="JP">
+	<head>
+		<font name="Regular" size="9.5" color="333333" src="../font/GenShinGothic-P-Regular.ttf" />
+		<font name="Small" size="9" color="333333" src="../font/GenShinGothic-P-Regular.ttf" />
+		<font name="Bold" src="../font/GenShinGothic-P-Bold.ttf" />
+		<font name="Heavy" src="../font/GenShinGothic-P-Heavy.ttf" />
+	</head>
+		<doc page_size="HPDF_PAGE_SIZE_A4"
+				landscape="HPDF_PAGE_PORTRAIT" language="JP">
 
-        <block position_x="25" position_y="27"
-                width="545" height="25" fill="484848">
+		<block position_x="25" position_y="27"
+				width="545" height="25" fill="484848">
 
-            <text font="regular" size="16" color="ffffff" align="center"
-                    position_x="0" position_y="47">
+		<text font="regular" size="16" color="ffffff" align="center"
+				position_x="0" position_y="47">
                 御　請　求　書
             </text>
         </block>
 
-        <textarea	font="Small" summary="作成日" width="30" height="12"
+		<textarea	font="Small" summary="作成日" width="30" height="12"
 					position_x="445" position_y="78">
 			<text text_align="right">作成日：</text>
 		</textarea> 
@@ -33,14 +33,14 @@
 		</textarea> 
 
 		<pr></pr>
-        <textarea font="Regular" position_x="438" position_y="78" summary="作成日">作成日：</textarea> 
-        <textarea	font="Small" position_x="25" position_y="148" width="290" height="17"
+		<textarea font="Regular" position_x="438" position_y="78" summary="作成日">作成日：</textarea> 
+		<textarea	font="Small" position_x="25" position_y="148" width="290" height="17"
 					summary="件名欄" padding_bottom="4" border_bottom="1" border_color="666666">
 			<text>件 　 名 　 　 ：</text>
 			<placeholder name="title" type="string" />
 		</textarea> 
 
-        <textarea	font="Regular" font_size="13" summary="合計金額欄"
+		<textarea	font="Regular" font_size="13" summary="合計金額欄"
 					position_x="25" position_y="234" width="290" height="20"
 					padding_bottom="4" border_bottom="1" border_color="666666"
 					border_style="double">
@@ -48,28 +48,27 @@
 			<!-- <placeholder name="estimate_total" type="string" /> -->
 		</textarea> 
 
-        <table position_x="25" position_y="254" width="540" height="389">
-            <tr height="12">
-                <th width="25">No</th>
-                <th width="280">商品及び明細</th>
-                <th width="50">数量</th>
-                <th width="35">単位</th>
-                <th width="65">単価</th>
-                <th width="85">金額</th>
-            </tr>
-            <tr height="15" border="dash" for="25">
-                <td width="25"></td>
-                <td width="280"></td>
-                <td width="50"></td>
-                <td width="35"></td>
-                <td width="65"></td>
-                <td width="85"></td>
-            </tr>
-        </table>
+		<table position_x="25" position_y="254" width="540" height="389"> <tr height="12">
+				<th width="25">No</th>
+				<th width="280">商品及び明細</th>
+				<th width="50">数量</th>
+				<th width="35">単位</th>
+				<th width="65">単価</th>
+				<th width="85">金額</th>
+			</tr>
+			<tr height="15" border="dash" for="25">
+				<td width="25"></td>
+				<td width="280"></td>	
+				<td width="50"></td>
+				<td width="35"></td>
+				<td width="65"></td>
+				<td width="85"></td>
+			</tr>
+		</table>
 
-	<hr position_x="25" position_y="641" width="540" summary="アイテムリストの境界線" />
+		<hr position_x="25" position_y="641" width="540" summary="アイテムリストの境界線" />
 
-        <table position_x="25" position_y="715" width="540" height="120">
-        </table>
-    </doc>
+		<table position_x="25" position_y="715" width="540" height="120">
+		</table>
+	</doc>
 </content>
