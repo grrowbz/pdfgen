@@ -41,19 +41,21 @@ $(function(){
     $("#button").on('click', function(){
         var JSONdata = {
         template: $("#template").val(),
-        create_date: $("#create_date").val(),
-        project_no: $("#project_no").val(),
-        order_no: $("#order_no").val(),
-        client_name: $("#client_name").val(),
-        title: $("#title").val(),
-        delivery_deadline: $("#delivery_deadline").val(),
-        delivery_method: $("#delivery_method").val(),
-        payment_terms: $("#payment_terms").val(),
-        term_limit: $("#term_limit").val(),
-        item_data: $("#item_data").val(),
-        deliverables: $("#deliverables").val(),
-        remarks_column: $("#remarks_column").val(),
-        price: $("#price").val()
+		data : {
+	        create_date: $("#create_date").val(),
+	        project_no: $("#project_no").val(),
+	        order_no: $("#order_no").val(),
+	        client_name: $("#client_name").val(),
+	        title: $("#title").val(),
+	        delivery_deadline: $("#delivery_deadline").val(),
+	        delivery_method: $("#delivery_method").val(),
+	        payment_terms: $("#payment_terms").val(),
+	        term_limit: $("#term_limit").val(),
+	        item_data: $("#item_data").val(),
+	        deliverables: $("#deliverables").val(),
+	        remarks_column: $("#remarks_column").val(),
+	        price: $("#price").val()
+			}
         }; 
     export_pdf('/generate', JSONdata);
     });
