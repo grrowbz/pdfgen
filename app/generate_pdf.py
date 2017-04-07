@@ -35,29 +35,30 @@ def lambda_handler(event, context):
 	''' 
 	setter		= form.getValueSetter()
 
-	for name in setter.getPlaceHolderKeys():
-		form.renderPlaceHolder(setter.getPlaceHolder(name), context[name])
+	for name in context['data'].keys():
+		if name in setter.getPlaceHolderKeys():
+			form.renderPlaceHolder(setter.getPlaceHolder(name), context['data'][name])
 
 
 	if context['template'] == "invoice":
-		form.setProjectNumber(context['project_no'], context['order_no'])
-		form.setOrderNumber(context['order_no'])
+		form.setProjectNumber(context['data']['project_no'], context['data']['order_no'])
+		form.setOrderNumber(context['data']['order_no'])
 	else:
-		form.setProjectNumber(context['project_no'])
+		form.setProjectNumber(context['data']['project_no'])
 
 	if context['template'] in ["estimate", "purchase_order"]:
 		pass
 	elif context['template'] == "invoice":
 		pass
-		## form.setTermLimit(context['term_limit'])
+		## form.setTermLimit(conte['data']xt['term_limit'])
  
-	## form.setCreateDate(context['create_date'])
-	form.setDeliverables(context['deliverables'])
-	form.setRemarksColumn(context['remarks_column'])
+	## form.setCreateDate(context['data']['create_date'])
+	form.setDeliverables(context['data']['deliverables'])
+	form.setRemarksColumn(context['data']['remarks_column'])
 
 	subtotal = 0
-	if context['item_data'] :
-		p = json.loads(context['item_data'])
+	if context['data']['item_data'] :
+		p = json.loads(context['data']['item_data'])
 	for x in range(1,21):
 		if( p.has_key(unicode(x)) ):
 			if (p[unicode(x)].has_key(u'qty')):
