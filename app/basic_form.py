@@ -183,7 +183,7 @@ class BasicForm(object):
 					cls.text.put(cN.text()).write_with_align(cN.textAlign(), nd.width(), x, y).flush()
 					cls.setCursor(x + nd.width(), y)
 				else:
-					8ls.text.put(cN.text()).write(x, y).flush()
+					cls.text.put(cN.text()).write(x, y).flush()
 					cls.setCursor(x + cls.text.put_with_width(cN.text()), y)
 				cls.text.flush()
 				cls.__attribPadding(cN, 'After')
