@@ -103,6 +103,8 @@ class CNodeClass():
 	def textAlign(cls): return cls.__getExtraAttrValue("str", 'text_align')
 	def paddingBottom(cls): return cls.__getExtraAttrValue("int", 'padding_bottom')
 	def paddingTop(cls): return cls.__getExtraAttrValue("int", 'padding_top')
+	def paddingRight(cls): return cls.__getExtraAttrValue("int", 'padding_right')
+	def paddingLeft(cls): return cls.__getExtraAttrValue("int", 'padding_left')
 
 	### XMLタグ内のプロパティ値（文字列）の取得メソッド
 	### name		__getAttrStrValue

@@ -39,20 +39,9 @@ def lambda_handler(event, context):
 		if name in setter.getPlaceHolderKeys():
 			form.renderPlaceHolder(setter.getPlaceHolder(name), context['data'][name])
 
-
 	if context['template'] == "invoice":
-		form.setProjectNumber(context['data']['project_no'], context['data']['order_no'])
 		form.setOrderNumber(context['data']['order_no'])
-	else:
-		form.setProjectNumber(context['data']['project_no'])
 
-	if context['template'] in ["estimate", "purchase_order"]:
-		pass
-	elif context['template'] == "invoice":
-		pass
-		## form.setTermLimit(conte['data']xt['term_limit'])
- 
-	## form.setCreateDate(context['data']['create_date'])
 	form.setDeliverables(context['data']['deliverables'])
 	form.setRemarksColumn(context['data']['remarks_column'])
 

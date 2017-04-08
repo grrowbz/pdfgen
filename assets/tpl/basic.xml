@@ -11,18 +11,10 @@
 		<doc page_size="HPDF_PAGE_SIZE_A4"
 				landscape="HPDF_PAGE_PORTRAIT" language="JP">
 
-		<block position_x="25" position_y="27"
-				width="545" height="25" fill="484848">
-
-		<text font="regular" size="16" color="ffffff" align="center"
-				position_x="0" position_y="47">
-                御　請　求　書
-            </text>
-        </block>
-
 		<textarea	font="Small" summary="作成日" width="30" height="12"
 					position_x="445" position_y="78">
-			<text text_align="right">作成日：</text>
+			<text text_align="right" padding_right="4">作成日：</text>
+			<placeholder name="create_date" type="string" />
 		</textarea> 
 
         <textarea	font="Regular" font_size="12" summary="宛名欄" width="250" height="20"
@@ -33,19 +25,11 @@
 		</textarea> 
 
 		<pr></pr>
-		<textarea font="Regular" position_x="438" position_y="78" summary="作成日">作成日：</textarea> 
+
 		<textarea	font="Small" position_x="25" position_y="148" width="290" height="17"
 					summary="件名欄" padding_bottom="4" border_bottom="1" border_color="666666">
-			<text>件 　 名 　 　 ：</text>
+			<text padding_right="4" >件 　 名 　 　 ：</text>
 			<placeholder name="title" type="string" />
-		</textarea> 
-
-		<textarea	font="Regular" font_size="13" summary="合計金額欄"
-					position_x="25" position_y="234" width="290" height="20"
-					padding_bottom="4" border_bottom="1" border_color="666666"
-					border_style="double">
-			<text>お見積金額（税込）</text>
-			<!-- <placeholder name="estimate_total" type="string" /> -->
 		</textarea> 
 
 		<table position_x="25" position_y="254" width="540" height="389"> <tr height="12">
