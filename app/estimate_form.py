@@ -17,11 +17,11 @@ class EstimateForm(BasicForm):
 		super(self.__class__, self).__init__(haru)
 		self.overwriteRender("../assets/tpl/estimate.xml")
 
+		"""
 		## Header 
 		self.text.open_font(self.font["Heavy"]["src"]).set_style(16,[1,1,1])
 		self.text.put(u'御　見　積　書').write_with_align("center", self.haru.getX(), 0, 47).flush()
 
-		"""
 		## invoice meta information
 		self.setFont("Regular",9.5,[0.25,0.25,0.25])
 		self.text.put(u'見積No：').write(self.haru.getX() - 160, 65).flush()
@@ -48,30 +48,10 @@ class EstimateForm(BasicForm):
 		self.setSignBox()
 		"""
 
-	### invoice meta infomation set methods 
-	def setProjectNumber(cls, number):
-		cls.text.open_font(cls.font["Regular"]["src"]).set_style(9.5,[0.25,0.25,0.25])
-		cls.text.put("PR" + number).write(cls.haru.getX() - 115, 65).flush()
-
-	## invoice infomation set method
-	def setDeliveryDeadline(cls, date):
-		return True
-		cls.setFont("Regular",9,[0.25,0.25,0.25])
-		cls.text.put(date).write(25 + 65, 199).flush()
-
 	def setDeliveryMethod(cls, method):
 		return True
 		cls.setFont("Regular",9,[0.25,0.25,0.25])
 		cls.text.put(method).write(25 + 65, 216).flush()
-
-	def setPaymentTerms(cls, terms):
-		return True
-		cls.setFont("Regular",9,[0.25,0.25,0.25])
-		cls.text.put(terms).write(25 + 65, 234).flush()
-
-	def setPrice(cls, price):
-		return True
-		##super(cls.__class__, cls).setPrice(u'お見積金額（税込）', price)
 
 	def createObject(cls):
 		return cls.haru

@@ -170,27 +170,38 @@ class BasicForm(object):
 			
 		
 	def __childNodeParser(cls, nd, font, font_size,font_color):
-		setter	= cls.setter
+		setter		= cls.setter
+		eol_flag	= ""
+		
 
 		for e in nd.getChildNodes():
 			x, y	= cls.getCursor()
+			cN		= CNodeClass(e)
 
 			if e.tag == "text":
-				cN	= CNodeClass(e)
+
+				if eol_flag == 'text':
+					cls.text.flush()
+				elif eol_flag == 'br':
+					pass
 
 				cls.__attribPadding(cN, 'Before')
 				if cN.isExists('text_align'):
-					cls.text.put(cN.text()).write_with_align(cN.textAlign(), nd.width(), x, y).flush()
+					cls.text.put(cN.text()).write_with_align(cN.textAlign(), nd.width(), x, y)
 					cls.setCursor(x + nd.width(), y)
 				else:
-					cls.text.put(cN.text()).write(x, y).flush()
 					cls.setCursor(x + cls.text.put_with_width(cN.text()), y)
-				cls.text.flush()
+					cls.text.write(x, y)
 				cls.__attribPadding(cN, 'After')
 
 			elif e.tag == 'placeholder':
-				cN	= CNodeClass(e)
 				setter.setPlaceHolder(cN.name(), x, y, nd.width(), cN.type(), font, font_size, font_color)
+			elif e.tag == 'br':
+				cls.text.put("\n").write(x,y)
+			eol_flag	= e.tag	
+		else:
+			cls.text.flush()
+
 
 	### 文字列（テキスト領域）描画メソッド
 	def renderTextArea(cls, node):

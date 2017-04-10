@@ -1,6 +1,6 @@
 #!/bin/env python
 # -*- coding: utf-8 -*-
-# vim:set ts=4 fenc=utf-8:
+# vim:set ts=4 sw=4 expandtab smarttab fenc=utf-8:
 #
 # libharu pdf library wrapper for python -- libharu.py
 #
@@ -170,7 +170,7 @@ class HaruText(SuperHaruObject):
 
     ### 2016/11/10 support multi line text
     def put(cls, text):
-        strArry = text.encode("utf-8").split("\n")
+        strArry = text.encode("utf-8").strip().split("\n")
         if len(strArry) > 1:
             for st in strArry:
                 cls.__text.extend([ unicode(st, "utf-8").encode(cls.get_encode()), "\n"])

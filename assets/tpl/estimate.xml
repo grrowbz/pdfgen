@@ -22,7 +22,7 @@
 				<placeholder name="project_no" type="string" />
 		</textarea>
 		<textarea font="Regular" position_x="25" position_y="112" summary="見積りのご案内">
-			<text>下記の通りお見積り致しますので、</text><br />
+			<text>下記の通りお見積り致しますので、</text></br>
 			<text>よろしくお願い申し上げます。</text>
 		</textarea> 
 
@@ -32,7 +32,7 @@
 		<textarea font="Heavy" summary="社名タイトル" position_x="450" position_y="132">
 			<text>Grrow</text>
 		</textarea>
-		<textarea font="Regular" summary="住所" position_x="388" position_y="146">
+		<textarea font="Regular" summary="住所" position_x="385" position_y="146">
 			<text>〒140-001</text>
 			<text>東京都品川区北品川</text><br />
 			<text>1−9−7 トップルーム品川1015</text>

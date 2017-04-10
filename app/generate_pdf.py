@@ -46,6 +46,7 @@ def lambda_handler(event, context):
 	form.setRemarksColumn(context['data']['remarks_column'])
 
 	subtotal = 0
+	"""
 	if context['data']['item_data'] :
 		p = json.loads(context['data']['item_data'])
 	for x in range(1,21):
@@ -60,7 +61,8 @@ def lambda_handler(event, context):
 						p[unicode(x)][u'price'])
 			else:
 				form.setItemDataForOnlySubTitle(   x, x, p[unicode(x)][u'item'])
-		form.setPrice(subtotal)
+	"""
+		## form.setPrice(subtotal)
 
 	form.createObject().save('/tmp/.tmp.pdf')
 	with open('/tmp/.tmp.pdf', 'r') as f:
