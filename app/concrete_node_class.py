@@ -100,7 +100,7 @@ class CNodeClass():
 	def summary(cls): return cls.__getExtraAttrValue("str", 'summary')
 	def font(cls): return cls.__getExtraAttrValue("str", 'font')
 	def fontSize(cls): return cls.__getExtraAttrValue("int", 'font_size')
-	def textAlign(cls): return cls.__getExtraAttrValue("str", 'text_align')
+	def textAlign(cls): return cls.__getExtraAttrValue("str", 'align')
 	def paddingBottom(cls): return cls.__getExtraAttrValue("int", 'padding_bottom')
 	def paddingTop(cls): return cls.__getExtraAttrValue("int", 'padding_top')
 	def paddingRight(cls): return cls.__getExtraAttrValue("int", 'padding_right')

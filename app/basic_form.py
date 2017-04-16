@@ -18,7 +18,7 @@ class BasicForm(object):
 	font		= {}
 	setter		= ""
 	textdata	= {}
-	cursor		= ""
+	cursor		= [[0, 0]] * 2
 
 	def __init__(self, haru):
 
@@ -61,11 +61,16 @@ class BasicForm(object):
 	def setCursor(cls, *args):
 		position	= args
 		if len(args) < 2: position	= args[0]
-		cls.cursor	= (position[0], position[1]) 
+		cls.cursor[0]	= cls.getCursor()
+		cls.cursor[1]	= (position[0], position[1]) 
 		return cls
 
 	def getCursor(cls, pos = None ):
-		return cls.cursor[0], cls.cursor[1]
+		return cls.cursor[1][0], cls.cursor[1][1]
+
+	def backCursor(cls):
+		cls.cursor[1]	= (cls.cursor[0][0], cls.cursor[0][1])
+		return cls
 
 	def __getPosAttr(cls, node):
 		return [int(node.attrib['position_x']), int(node.attrib['position_y'])]
@@ -173,31 +178,25 @@ class BasicForm(object):
 		setter		= cls.setter
 		eol_flag	= ""
 		
-
 		for e in nd.getChildNodes():
-			x, y	= cls.getCursor()
 			cN		= CNodeClass(e)
+			x, y	= cls.getCursor()
 
 			if e.tag == "text":
-
-				if eol_flag == 'text':
-					cls.text.flush()
-				elif eol_flag == 'br':
-					pass
-
 				cls.__attribPadding(cN, 'Before')
-				if cN.isExists('text_align'):
-					cls.text.put(cN.text()).write_with_align(cN.textAlign(), nd.width(), x, y)
+				if cN.isExists('align'):
 					cls.setCursor(x + nd.width(), y)
+					cls.text.put(cN.text()).write_with_align(cN.textAlign(), nd.width(), x, y)
 				else:
 					cls.setCursor(x + cls.text.put_with_width(cN.text()), y)
 					cls.text.write(x, y)
 				cls.__attribPadding(cN, 'After')
-
+				cls.text.flush()
 			elif e.tag == 'placeholder':
 				setter.setPlaceHolder(cN.name(), x, y, nd.width(), cN.type(), font, font_size, font_color)
 			elif e.tag == 'br':
-				cls.text.put("\n").write(x,y)
+				x, y = cls.backCursor().getCursor()
+				cls.setCursor(x, y + cls.text.getFontHeight())
 			eol_flag	= e.tag	
 		else:
 			cls.text.flush()

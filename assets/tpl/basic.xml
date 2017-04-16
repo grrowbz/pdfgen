@@ -13,7 +13,7 @@
 
 		<textarea	font="Small" summary="作成日" width="30" height="12"
 					position_x="445" position_y="78">
-			<text text_align="right" padding_right="4">作成日：</text>
+			<text align="right" padding_right="4">作成日：</text>
 			<placeholder name="create_date" type="string" />
 		</textarea> 
 
@@ -21,7 +21,7 @@
 					position_x="25" position_y="90" padding_bottom="4" border_bottom="1" 
 					border_color="666666" auto_reduced="True">
 			<placeholder name="client_name" type="string" />
-			<text text_align="right">様</text>
+			<text align="right">様</text>
 		</textarea> 
 
 		<pr></pr>
