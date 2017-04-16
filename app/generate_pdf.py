@@ -43,7 +43,7 @@ def lambda_handler(event, context):
 		form.setOrderNumber(context['data']['order_no'])
 
 	form.setDeliverables(context['data']['deliverables'])
-	form.setRemarksColumn(context['data']['remarks_column'])
+	##form.setRemarksColumn(context['data']['remarks_column'])
 
 	subtotal = 0
 	"""

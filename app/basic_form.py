@@ -28,36 +28,6 @@ class BasicForm(object):
 		self.setter	= ValueSetterClass(self)	
 		self.render("../assets/tpl/basic.xml")
 
-		"""
-		## Header 
-		self.draw.rect_with_fill(25, 27, 545, 25, [0.28, 0.28, 0.28])
-
-		InfoBoxY  = 630
-		BottomBoxHeight = 70
-		### 納品物
-		self.setFont("Regular",10,[0.25,0.25,0.25])
-		self.text.put(u'納品物').write(32, InfoBoxY + 38).flush()
-		self.draw.rect(25, InfoBoxY, 45, BottomBoxHeight - 2, 1, [0.27, 0.27, 0.27])
-		self.draw.rect(70, InfoBoxY, 235, BottomBoxHeight - 2, 1, [0.27, 0.27, 0.27])
-
-		### Price Box
-		self.setFont("Regular",11,[0.25,0.25,0.25])
-		self.text.put(u'小計').write(480 - 26, InfoBoxY + 16).flush()
-		self.text.put(u'消費税').write(480 - 39, InfoBoxY + 38).flush()
-		self.setFont("Regular",12,[0.25,0.25,0.25])
-		self.text.put(u'合計').write(480 - 26, InfoBoxY + 62).flush()
-
-		self.draw.rect(480, InfoBoxY, 85, BottomBoxHeight - 2, 1, [0.27, 0.27, 0.27])
-		self.draw.line(305, InfoBoxY, 175, 1, [0.27, 0.27, 0.27])
-		self.draw.line(305, InfoBoxY + 22, 260, 1, [0.27, 0.27, 0.27])
-		self.draw.line(305, InfoBoxY + 46, 260, 1, [0.27, 0.27, 0.27])
-		self.draw.line(305, InfoBoxY + 68, 175, 1, [0.27, 0.27, 0.27])
-
-		ItemBoxY = BoxY + 12
-		for var in range(1, 21):
-			self.draw.dash_line(25, ItemBoxY + 15 * var, 540, 0.7, [2, 1], [0.3, 0.3, 0.3])
-		"""
-
 	def setCursor(cls, *args):
 		position	= args
 		if len(args) < 2: position	= args[0]
@@ -174,7 +144,9 @@ class BasicForm(object):
 				elif attr == 'padding_bottom': cls.setCursor(x, y - nd.paddingBottom())
 
 		if type == "Before": 
-			pass
+			if nd.hasExists('padding_left'):
+				for attr in nd.getAttrib():
+					if attr == 'padding_left': cls.setCursor(x + nd.paddingLeft(), y)
 		elif type == "After":
 			if nd.hasExists('padding_right'):
 				for attr in nd.getAttrib():
@@ -188,23 +160,23 @@ class BasicForm(object):
 		
 		for e in nd.getChildNodes():
 			cN		= CNodeClass(e)
+			cls.__attribPadding(cN, 'Before')
 			x, y	= cls.getCursor()
 
 			if e.tag == "text":
-				cls.__attribPadding(cN, 'Before')
 				if cN.isExists('align'):
 					cls.setCursor(x + nd.width(), y)
 					cls.text.put(cN.text()).write_with_align(cN.textAlign(), nd.width(), x, y)
 				else:
 					cls.setCursor(x + cls.text.put_with_width(cN.text()), y)
 					cls.text.write(x, y)
-				cls.__attribPadding(cN, 'After')
 				cls.text.flush()
 			elif e.tag == 'placeholder':
 				setter.setPlaceHolder(cN.name(), x, y, nd.width(), cN.type(), font, font_size, font_color)
 			elif e.tag == 'br':
 				x, y = cls.backCursor().getCursor()
 				cls.setCursor(x, y + cls.text.getFontHeight())
+			cls.__attribPadding(cN, 'After')
 		else:
 			cls.text.flush()
 

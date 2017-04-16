@@ -74,7 +74,9 @@
 					border="1" border_color="666666">
 		</textarea>
 
-		<table position_x="25" position_y="705" width="540" height="130">
-		</table>
+		<textarea font="Regular" position_x="25" position_y="705" width="540" height="130"
+					 summary="備考欄" border="1" border_color="666666">
+			<placeholder padding_left="5" padding_top="10" name="remarks_column" type="string" />
+		</textarea>
 	</doc>
 </content>
