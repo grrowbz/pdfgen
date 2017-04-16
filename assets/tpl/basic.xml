@@ -12,13 +12,13 @@
 				landscape="HPDF_PAGE_PORTRAIT" language="JP">
 
 		<textarea	font="Small" summary="作成日" width="30" height="12"
-					position_x="445" position_y="78">
+					position_x="445" position_y="62">
 			<text align="right" padding_right="4">作成日：</text>
 			<placeholder name="create_date" type="string" />
 		</textarea> 
 
-        <textarea	font="Regular" font_size="12" summary="宛名欄" width="250" height="20"
-					position_x="25" position_y="90" padding_bottom="4" border_bottom="1" 
+        <textarea	font="Regular" font_size="12" summary="宛名欄" width="250" height="12"
+					position_x="25" position_y="70" padding_bottom="4" border_bottom="1" 
 					border_color="666666" auto_reduced="True">
 			<placeholder name="client_name" type="string" />
 			<text align="right">様</text>
@@ -26,33 +26,57 @@
 
 		<pr></pr>
 
-		<textarea	font="Small" position_x="25" position_y="148" width="290" height="17"
+		<textarea	font="Small" position_x="25" position_y="121" width="290" height="11"
 					summary="件名欄" padding_bottom="4" border_bottom="1" border_color="666666">
 			<text padding_right="4" >件 　 名 　 　 ：</text>
 			<placeholder name="title" type="string" />
 		</textarea> 
 
-		<table position_x="25" position_y="254" width="540" height="389"> <tr height="12">
+		<table position_x="25" position_y="224" width="540" height="404">
+			<tr height="12">
 				<th width="25">No</th>
 				<th width="280">商品及び明細</th>
-				<th width="50">数量</th>
-				<th width="35">単位</th>
+				<th width="35">数量</th>
+				<th width="40">単位</th>
 				<th width="65">単価</th>
-				<th width="85">金額</th>
+				<th width="95">金額</th>
 			</tr>
-			<tr height="15" border="dash" for="25">
+			<tr height="15" border="dash" for="26">
 				<td width="25"></td>
 				<td width="280"></td>	
-				<td width="50"></td>
 				<td width="35"></td>
+				<td width="40"></td>
 				<td width="65"></td>
-				<td width="85"></td>
+				<td width="95"></td>
 			</tr>
 		</table>
+		<hr position_x="25" position_y="626" width="540" summary="アイテムリストの境界線" />
 
-		<hr position_x="25" position_y="641" width="540" summary="アイテムリストの境界線" />
-
-		<table position_x="25" position_y="715" width="540" height="120">
+		<textarea font="Regular" font_size="11" position_x="25" position_y="628" width="50" height="66" 
+					border="1" border_color="666666">
+				<text align="center">納品物</text>
+		</textarea>
+		<textarea font="Regular" position_x="75" position_y="628" width="255" height="66" 
+					border="1" border_color="666666">
+		</textarea>
+		<table position_x="345" position_y="628" width="130" height="66" border_color="666666" summary="小計/合計">
+			<tr height="22"> <th width="130">小計</th> </tr>
+			<tr height="22"> <th width="130">消費税</th> </tr>
+			<tr height="22"> <th width="130">合計</th> </tr>
 		</table>
+		<textarea font="Regular" position_x="475" position_y="628" width="90" height="22" 
+					border="1" border_color="666666">
+		</textarea>
+		<textarea font="Regular" position_x="475" position_y="650" width="90" height="22" 
+					border="1" border_color="666666">
+		</textarea>
+		<textarea font="Regular" position_x="475" position_y="672" width="90" height="22" 
+					border="1" border_color="666666">
+		</textarea>
+
+		<textarea font="Regular" position_x="25" position_y="705" width="540" height="130"
+					 summary="備考欄" border="1" border_color="666666">
+			<placeholder padding_left="5" padding_top="10" name="remarks_column" type="string" />
+		</textarea>
 	</doc>
 </content>

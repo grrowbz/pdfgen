@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- vim:set ts=4 fenc=utf-8: -->
+
+<content name="帳票基準テンプレート">
+	<head>
+		<font name="Regular" size="9.5" color="333333" src="../font/GenShinGothic-P-Regular.ttf" />
+		<font name="Small" size="9" color="333333" src="../font/GenShinGothic-P-Regular.ttf" />
+		<font name="Bold" src="../font/GenShinGothic-P-Bold.ttf" />
+		<font name="Heavy" src="../font/GenShinGothic-P-Heavy.ttf" />
+	</head>
+	<doc page_size="HPDF_PAGE_SIZE_A4"
+			landscape="HPDF_PAGE_PORTRAIT" language="JP">
+
+	</doc>
+</content>

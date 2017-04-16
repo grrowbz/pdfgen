@@ -67,8 +67,8 @@ class CNodeClass():
 
 	def x(cls): return cls.__getAttrIntValue('position_x')
 	def y(cls): return cls.__getAttrIntValue('position_y')
-	def width(cls): return cls.__getAttrIntValue('width')
-	def height(cls): return cls.__getAttrIntValue('height')
+	def width(cls): return cls.__getAttrIntValue('width') if cls.isExists('width') else 0
+	def height(cls): return cls.__getAttrIntValue('height') if cls.isExists('height') else 0
 	def getPosition(cls): return [cls.x(), cls.y()]
 	def size(cls): return cls.__getExtraAttrValue("int", 'size')
 
@@ -96,6 +96,8 @@ class CNodeClass():
 	def borderStyle(cls): return cls.__getExtraAttrValue("str", 'border_style')
 	def borderBottom(cls): return cls.__getExtraAttrValue("int", 'border_bottom')
 	def borderTop(cls): return cls.__getExtraAttrValue("int", 'border_top')
+	def borderLeft(cls): return cls.__getExtraAttrValue("int", 'border_left')
+	def borderRight(cls): return cls.__getExtraAttrValue("int", 'border_right')
 
 	def summary(cls): return cls.__getExtraAttrValue("str", 'summary')
 	def font(cls): return cls.__getExtraAttrValue("str", 'font')

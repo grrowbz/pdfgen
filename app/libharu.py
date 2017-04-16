@@ -219,10 +219,10 @@ class HaruText(SuperHaruObject):
     def flush(cls): cls.__text	= []
     def get_haru_encode(cls): return cls.__HaruEnc[cls.__Encoding]		
     def get_encode(cls): return cls.__Encoding
-    def getFontHeight(cls):
+    def getFontHeight(cls, size):
         height_as  = int(HPDF_Font_GetAscent(cls.__font))
         height_ds  = int(HPDF_Font_GetDescent(cls.__font))
-        return round(float(height_as + height_ds) / 72, 1)
+        return round(float(height_as + height_ds) * size / 1000.0, 1)
 
 class HaruImage(SuperHaruObject):
 

@@ -9,6 +9,7 @@ from ctypes import *
 from libharu import *
 from concrete_node_class import CNodeClass
 from value_setter_class import ValueSetterClass
+from parser_utility import ParserUtility
 
 class BasicForm(object):
 
@@ -17,7 +18,7 @@ class BasicForm(object):
 	draw		= ""
 	font		= {}
 	setter		= ""
-	textdata	= {}
+	util		= ""
 	cursor		= [[0, 0]] * 2
 
 	def __init__(self, haru):
@@ -26,51 +27,8 @@ class BasicForm(object):
 		self.draw	= HaruDraw(self.haru)
 		self.text	= HaruText(self.haru)
 		self.setter	= ValueSetterClass(self)	
+		self.util	= ParserUtility()
 		self.render("../assets/tpl/basic.xml")
-
-		"""
-		## Header 
-		self.draw.rect_with_fill(25, 27, 545, 25, [0.28, 0.28, 0.28])
-
-		InfoBoxY  = 630
-		BottomBoxHeight = 70
-		### 納品物
-		self.setFont("Regular",10,[0.25,0.25,0.25])
-		self.text.put(u'納品物').write(32, InfoBoxY + 38).flush()
-		self.draw.rect(25, InfoBoxY, 45, BottomBoxHeight - 2, 1, [0.27, 0.27, 0.27])
-		self.draw.rect(70, InfoBoxY, 235, BottomBoxHeight - 2, 1, [0.27, 0.27, 0.27])
-
-		### Price Box
-		self.setFont("Regular",11,[0.25,0.25,0.25])
-		self.text.put(u'小計').write(480 - 26, InfoBoxY + 16).flush()
-		self.text.put(u'消費税').write(480 - 39, InfoBoxY + 38).flush()
-		self.setFont("Regular",12,[0.25,0.25,0.25])
-		self.text.put(u'合計').write(480 - 26, InfoBoxY + 62).flush()
-
-		self.draw.rect(480, InfoBoxY, 85, BottomBoxHeight - 2, 1, [0.27, 0.27, 0.27])
-		self.draw.line(305, InfoBoxY, 175, 1, [0.27, 0.27, 0.27])
-		self.draw.line(305, InfoBoxY + 22, 260, 1, [0.27, 0.27, 0.27])
-		self.draw.line(305, InfoBoxY + 46, 260, 1, [0.27, 0.27, 0.27])
-		self.draw.line(305, InfoBoxY + 68, 175, 1, [0.27, 0.27, 0.27])
-
-		ItemBoxY = BoxY + 12
-		for var in range(1, 21):
-			self.draw.dash_line(25, ItemBoxY + 15 * var, 540, 0.7, [2, 1], [0.3, 0.3, 0.3])
-		"""
-
-	def setCursor(cls, *args):
-		position	= args
-		if len(args) < 2: position	= args[0]
-		cls.cursor[0]	= cls.getCursor()
-		cls.cursor[1]	= (position[0], position[1]) 
-		return cls
-
-	def getCursor(cls, pos = None ):
-		return cls.cursor[1][0], cls.cursor[1][1]
-
-	def backCursor(cls):
-		cls.cursor[1]	= (cls.cursor[0][0], cls.cursor[0][1])
-		return cls
 
 	def __getPosAttr(cls, node):
 		return [int(node.attrib['position_x']), int(node.attrib['position_y'])]
@@ -82,9 +40,9 @@ class BasicForm(object):
 		cls.text.open_font(ph['font']).set_style(ph['size'],ph['color'])
 		cls.text.put(ctx).write(ph['x'], ph['y']).flush()
 
-	##################################
-	#### renderメソッド系
-	#################################
+########################################################
+### renderメソッド（コアメソッド）
+########################################################
 
 	def parseHeader(cls, node):
 		for e in list(node):
@@ -140,75 +98,115 @@ class BasicForm(object):
 			### デバッグメッセージの表示
 			print msgLog
 
+########################################################
+###		Attribute 解析メソッド
+###		主にタグ 解析メソッドからの呼び出し
+########################################################
+
 	#### 属性値:border、border_style、border_colorの処理
 	def __attribBorder(cls, nd):
-		x, y	= cls.getCursor()
+		_width, _height, _draw_method	= nd.width(), nd.height(), "line"
 
+		### height指定がない場合は中のテキストオブジェクトの高さをベースに計算
+		if nd.hasExists(["height"]) == False: 
+			_height		= cls.text.getFontHeight(nd.fontSize() \
+							if nd.isExists('font_size') else cls.font[nd.font()]["size"])
+			for e in nd.getChildNodes():
+				if e.tag == "br": _height += cls.text.getFontHeight(nd.fontSize() \
+									if nd.isExists('font_size') else cls.font[nd.font()]["size"])
 		### Borderのカラー設定
 		_color	= nd.borderColor() if nd.isExists('border_color') else [0, 0, 0]
 		_style	= nd.borderStyle() if nd.isExists('border_style') else False
 
-		if nd.hasExists(['border_top', 'border_bottom']):
-			for attr in nd.getAttrib():
-				### border_topの場合、yPosから高さ分引く必要がある。
+		if nd.hasExists(['border_top', 'border_bottom', 'border', 'border_left', 'border_right']):
+			_attributes		= ['border_top', 'border_bottom', 'border_left', 'border_right']\
+								if nd.hasExists(['border']) else nd.getAttrib() 
+			for attr in _attributes:
+				_xPos, _yPos	= cls.util.getCursor()
+				_size			= 0
+
 				if attr == 'border_top': 
-					cls.draw.line(x, y, nd.width(), nd.borderTop(), _color)
+					cls.__attribPadding(nd, 'Before')
+					_size, _length, _draw_method	= nd.borderTop(), _width, "line"
+
 				elif attr == 'border_bottom': 
-					cls.draw.line(x, y, nd.width(), nd.borderBottom(), _color)
-					if _style == "double":
-						cls.draw.line(x, y+2, nd.width(), nd.borderTop(), _color)
+					_size, _length, _draw_method	= nd.borderBottom(), _width, "line"
+					_yPos	+= _height
+
+				elif attr == 'border_left': 
+					_size, _length, _draw_method	= nd.borderLeft(), _height, "vline"
+					_yPos	+= _height
+
+				elif attr == 'border_right': 
+					_size, _length, _draw_method	= nd.borderRight(), _height, "vline"
+					_xPos	+= _width
+					_yPos	+= _height
+
+				if nd.hasExists(['border']): _size = nd.border()
+
+				if (_size):
+					eval("cls.draw." + _draw_method)(_xPos, _yPos, _length, _size, _color)
+					if (_style == "double"): 
+						if (_draw_method == "line"): _yPos += 1.7
+						elif(_draw_method == "vline"): _xPos += 1.7
+						eval("cls.draw." + _draw_method)(_xPos, _yPos, _length, _size, _color)
 
 	def __attribPadding(cls, nd, type="None"):
-		x, y	= cls.getCursor()
+		x, y	= cls.util.getCursor()
 
 		if nd.hasExists(['padding_top', 'padding_bottom']):
 			for attr in nd.getAttrib():
-				if attr == 'padding_top': cls.setCursor(x, y + nd.paddingTop())
-				elif attr == 'padding_bottom': cls.setCursor(x, y - nd.paddingBottom())
+				if attr == 'padding_top': cls.util.setCursor(x, y + nd.paddingTop())
+				elif attr == 'padding_bottom': cls.util.setCursor(x, y - nd.paddingBottom())
 
 		if type == "Before": 
-			pass
+			if nd.hasExists('padding_left'):
+				for attr in nd.getAttrib():
+					if attr == 'padding_left': cls.util.setCursor(x + nd.paddingLeft(), y)
 		elif type == "After":
 			if nd.hasExists('padding_right'):
 				for attr in nd.getAttrib():
-					if attr == 'padding_right': cls.setCursor(x + nd.paddingRight(), y)
+					if attr == 'padding_right': cls.util.setCursor(x + nd.paddingRight(), y)
 			
-		
+	#### 内部ノードのパーサーメソッド
+	#### 2017/4/23:今のところはrenderTextAreaメソッドからの呼び出しのみ
 	def __childNodeParser(cls, nd, font, font_size,font_color):
-		setter		= cls.setter
-		eol_flag	= ""
+		setter	= cls.setter
+ 		x, y	= cls.util.getCursor()
+		cls.util.setCursor(x, y +cls.text.getFontHeight(font_size))
 		
 		for e in nd.getChildNodes():
 			cN		= CNodeClass(e)
-			x, y	= cls.getCursor()
+			cls.__attribPadding(cN, 'Before')
+			x, y	= cls.util.getCursor()
 
 			if e.tag == "text":
-				cls.__attribPadding(cN, 'Before')
 				if cN.isExists('align'):
-					cls.setCursor(x + nd.width(), y)
+					cls.util.setCursor(x + nd.width(), y)
 					cls.text.put(cN.text()).write_with_align(cN.textAlign(), nd.width(), x, y)
 				else:
-					cls.setCursor(x + cls.text.put_with_width(cN.text()), y)
+					cls.util.setCursor(x + cls.text.put_with_width(cN.text()), y)
 					cls.text.write(x, y)
-				cls.__attribPadding(cN, 'After')
 				cls.text.flush()
 			elif e.tag == 'placeholder':
 				setter.setPlaceHolder(cN.name(), x, y, nd.width(), cN.type(), font, font_size, font_color)
 			elif e.tag == 'br':
-				x, y = cls.backCursor().getCursor()
-				cls.setCursor(x, y + cls.text.getFontHeight())
-			eol_flag	= e.tag	
+				x, y = cls.util.backCursor().getCursor()
+				cls.util.setCursor(x, y + cls.text.getFontHeight(font_size))
+			cls.__attribPadding(cN, 'After')
 		else:
 			cls.text.flush()
 
+#######################################################################
+###		タグの解析メソッド
+#######################################################################
 
-	### 文字列（テキスト領域）描画メソッド
+	#################################################3
+	### 文字列（テキスト領域）描画メソッド 
+	### <textarea>タグの出現時に呼び出される。　
 	def renderTextArea(cls, node):
 		nd			= CNodeClass(node)
-		xPos, yPos	= cls.setCursor(nd.getPosition()).getCursor()
-
-		cls.__attribBorder(nd)		 ### attribute border process
-		cls.__attribPadding(nd)		 ### attribute padding process
+		xPos, yPos	= cls.util.setCursor(nd.getPosition()).getCursor()
 
 		if nd.isExists('auto_reduced'):
 			pass
@@ -218,9 +216,14 @@ class BasicForm(object):
 		font_color		= nd.fontColor() if nd.isExists('font_color') else cls.font[nd.font()]["color"]
 
 		cls.text.open_font(font).set_style(font_size,font_color)
+
+		cls.__attribBorder(nd)		 ### attribute border process
 		cls.__childNodeParser(nd, font, font_size, font_color)
 
+
+	#################################################3
 	### 線表描画メソッド
+	### <table>タグの出現時に呼び出される
 	def renderTable(cls, node):
 		nd			= CNodeClass(node)
 		tPos, yPos	= nd.getPosition()
@@ -246,7 +249,8 @@ class BasicForm(object):
 							### ヘッダーのテキストを描画
 							cls.text.put(unicode(cell.text)).\
 								write_with_align('center', cWidth,\
-								vertPos, yPos + cHeight - 2).flush()
+								##vertPos, yPos + cHeight - 2).flush()
+								vertPos, linePos + cHeight - 2).flush()
 
 							cls.draw.rect(	vertPos, linePos, cWidth, cHeight,\
 								1, [0.27, 0.27, 0.27])
@@ -266,56 +270,6 @@ class BasicForm(object):
 					### td/thの処理：ここまで
 		## 列(tr)の処理：ここまで
 
-	def setCompanyInfo(cls):
-		## company information
-		KABU			= u'株式会社'
-		COMPANY_NAME	= u'Grrow'
-		POST_NO			= u'〒140-001'
-		ADRESS_1		= u'東京都品川区北品川'
-		ADRESS_2		= u'1-9-7 トップルーム品川1015'
-		PHONE_NO		= u'TEL：090-2420-2989'
-
-		cls.text.open_font(cls.font["Bold"]["src"]).set_style(16,[0.25,0.25,0.25])
-		cls.text.put(KABU).write(cls.haru.getX() - 192, 149).flush()
-		cls.text.open_font(cls.font["Bold"]["src"]).set_style(19,[0.25,0.25,0.25])
-		cls.text.put(COMPANY_NAME).write(cls.haru.getX() - 126, 149).flush()
-
-		cls.text.open_font(cls.font["Regular"]["src"]).set_style(11,[0.25,0.25,0.25])
-		cls.text.put(ADRESS_1).write(cls.haru.getX() - 132, 166).flush()
-		cls.text.put(ADRESS_2).write(cls.haru.getX() - 166, 179).flush()
-
-		cls.setFont("Regular", 9.5,[0.25,0.25,0.25])
-		## 郵便番号の出力位置表示 画面サイズX幅 - 132 - 45
-		cls.text.put(POST_NO).write_with_align("right", 45, cls.haru.getX() - 177, 166, 3).flush()
-		## 電話番号の設定
-		cls.text.put(PHONE_NO).write_with_align("right", 133, cls.haru.getX() - 166, 192).flush()
-
-	def setSignBox(cls):
-		### Sign Box
-		cls.setFont("Regular",9,[0.25,0.25,0.25])
-		cls.text.put(u'承認').write(433, 225).flush()
-		cls.text.put(u'担当者').write(508, 225).flush()
-		cls.draw.line(400, 230, 160, 1, [0.27, 0.27, 0.27])
-		cls.draw.rect(400, 214, 80, 76, 1, [0.27, 0.27, 0.27])
-		cls.draw.rect(480, 214, 80, 76, 1, [0.27, 0.27, 0.27])
-
-	def setCreateDate(cls, date):
-		cls.setFont("Regular",9.5,[0.25,0.25,0.25])
-		cls.text.put(date).write(cls.haru.getX() - 115, 78).flush()
-
-	### client name set method
-	def setClientName(cls, client_name):
-		return True
-		cls.setFont("Regular", 12,[0.25,0.25,0.25])
-		cls.text.put(u'様').write(248, 111).flush()
-		cls.text.put(client_name).setAutoReduce(215).write(27, 111).flush()
-
-	## project name set method
-	def setTitle(cls, title):
-		cls.setFont("Regular", 9,[0.25,0.25,0.25])
-		cls.text.put(title).write(25 + 65, 182).flush()
-
-	## Font Setting method 
 	def setFont(cls, name, weight, color):
 		cls.text.open_font(cls.font[name]["src"]).set_style(weight,color)
 
@@ -340,45 +294,6 @@ class BasicForm(object):
 		cls.setFont("Regular",15,[0.25,0.25,0.25])
 		textObj = cls.text.put(u"￥" + "{:,}".format(int(price)))
 		textObj.write_with_align('right', 166, 150, 276, 3 ).flush()
-
-	def setDeliverables(cls, deliverables, num=1):
-		cls.setFont("Regular",8.5,[0.25,0.25,0.25])
-		cls.text.put(deliverables).write(75, 633 + (12 * num)).flush()
-
-	def setRemarksColumn(cls, remarks, num=1):
-		cls.setFont("Regular",8.5,[0.25,0.25,0.25])
-		cls.text.put(remarks).write(30, 718 + (12 * num)).flush()
-
-	def __align(cls, string, x, width, position):
-		print len(string)
-		#return (x + width) - len(string)
-
-	def setItemData(cls, LineNo, no, item, qty, unit, uprice, price):
-		cls.setFont("Regular",8.5,[0.25,0.25,0.25])
-		YPos = 314 + (15 * LineNo) - 3
-
-		cls.text.put(str(no)).write_with_align('center', 25, 25, YPos).flush()
-		cls.text.put(unicode(item)).write(50 + 3, YPos).flush()
-		cls.text.put(str(qty)).write_with_align('center', 50, 330, YPos).flush()
-		cls.text.put(unicode(unit)).write_with_align('center', 35, 380, YPos).flush()
-
-		if (int(uprice) < 0) :
-			cls.setFont("Regular",8.5,[1,0,0])
-		textObj = cls.text.put(u"￥" + "{:,}".format(int(uprice)))
-		textObj.write_with_align('right', 65, 415, YPos, 3 ).flush()
-		cls.setFont("Regular",8.5,[0.25,0.25,0.25])
-
-		if (int(uprice) < 0) :
-			cls.setFont("Regular",8.5,[1,0,0])
-		textObj = cls.text.put(u"￥" + "{:,}".format(int(price)))
-		textObj.write_with_align('right', 85, 480, YPos, 3).flush()
-		cls.setFont("Regular",8.5,[0.25,0.25,0.25])
-
-	def setItemDataForOnlySubTitle(cls, LineNo, no, item):
-		cls.setFont("Regular",8.5,[0.25,0.25,0.25])
-		ListPosition = 314 + (15 * LineNo) - 3
-		cls.text.put(unicode(no)).write(25 + 10, ListPosition).flush()
-		cls.text.put(unicode(item)).write(50 + 3, ListPosition).flush()
 
 	def createObject(cls):
 		return cls.haru

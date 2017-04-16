@@ -4,7 +4,7 @@
 <content name="見積書テンプレート">
     <head>
         <font name="ES_Regular" size="9.5" color="333333" src="../font/GenShinGothic-P-Regular.ttf" />
-        <font name="Bold" size="16" color="333333" src="../font/GenShinGothic-P-Bold.ttf" />
+        <font name="Bold" size="12" color="333333" src="../font/GenShinGothic-P-Bold.ttf" />
         <font name="Heavy" size="19" color="333333" src="../font/GenShinGothic-P-Heavy.ttf" />
     </head>
 
@@ -16,51 +16,62 @@
 		</text>
 
 		<textarea	font="Small" summary="見積No" width="30" height="12" 
-					position_x="445" position_y="65">
+					position_x="445" position_y="50">
 				<text align="right" padding_right="4">見積No：</text>
 				<text>PR</text>
 				<placeholder name="project_no" type="string" />
 		</textarea>
-		<textarea font="Regular" position_x="25" position_y="112" summary="見積りのご案内">
+		<textarea font="Regular" position_x="25" position_y="87" width="150"
+				summary="見積りのご案内" border="1" border_color="666666" padding_top="5"
+				padding_bottom="5">
 			<text>下記の通りお見積り致しますので、</text><br />
 			<text>よろしくお願い申し上げます。</text>
 		</textarea> 
 
-		<textarea font="Bold" summary="社名タイトル" position_x="380" position_y="132">
+		<textarea font="Bold" summary="社名タイトル" position_x="422" position_y="95">
 			<text>株式会社</text>
-		</textarea>
-		<textarea font="Heavy" summary="社名タイトル" position_x="450" position_y="132">
 			<text>Grrow</text>
 		</textarea>
-		<textarea font="Regular" summary="住所署名" position_x="400" position_y="146" width="160">
-			<text align="right">東京都品川区北品川</text><br />
-			<text align="right">1−9−7 トップルーム品川1015</text><br />
-			<text align="right">TEL：090-2420-2989</text>
+
+		<textarea font="Regular" summary="住所署名" position_x="400" position_y="108" width="160">
+			<text align="right">〒110-0005 東京都台東区上野</text><br />
+			<text align="right">3-17-2 幸和ビル4階</text><br />
+			<text align="right">TEL：03-3836-5881</text>
 		</textarea>
 
-		<textarea font="Regular" position_x="400" position_y="214" width="80" border_bottom="1" border_color="666666">
+		<textarea font="Regular" position_x="410" position_y="149" 
+					width="75" height="65" border="1" border_color="666666">
 		</textarea>
-		<textarea font="Regular" position_x="480" position_y="214" width="80" border_bottom="1" border_color="666666">
+		<textarea font="Small" position_x="410" position_y="149" 
+					width="75" height="15" border="1" border_color="666666">
+			<text align="center">承認者</text>
+		</textarea>
+		<textarea font="Regular" position_x="485" position_y="149" 
+					width="75" height="65" border="1" border_color="666666">
+		</textarea>
+		<textarea font="Small" position_x="485" position_y="149" 
+					width="75" height="15" border="1" border_color="666666">
+			<text align="center">担当者</text>
 		</textarea>
 
-		<textarea	font="Small" position_x="25" position_y="165" width="290" height="17"
+		<textarea	font="Small" position_x="25" position_y="137" width="290" height="11"
 					summary="納入期限欄" padding_bottom="4" border_bottom="1" border_color="666666">
 			<text padding_right="4">納 入 期 限 　 ：</text>
 			<placeholder name="delivery_deadline" type="string" />
 		</textarea>
-		<textarea	font="Small" position_x="25" position_y="182" width="290" height="17"
+		<textarea	font="Small" position_x="25" position_y="154" width="290" height="11"
 					summary="納入方式欄" padding_bottom="4" border_bottom="1" border_color="666666">
 			<text padding_right="4">納 入 方 式 　 ：</text>
 			<placeholder name="delivery_method" type="string" />
 		</textarea>
-		<textarea	font="Small" position_x="25" position_y="199" width="290" height="17"
+		<textarea	font="Small" position_x="25" position_y="170" width="290" height="11"
 					summary="御支払条件" padding_bottom="4" border_bottom="1" border_color="666666">
 			<text padding_right="4">御 支 払 条 件 ：</text>
 			<placeholder name="payment_terms" type="string" />
 		</textarea>
 
 		<textarea	font="Regular" font_size="13" summary="合計金額欄"
-					position_x="25" position_y="234" width="290" height="20"
+					position_x="25" position_y="198" width="290" height="13"
 					padding_bottom="4" border_bottom="1" border_color="666666"
 					border_style="double">
 			<text>お見積金額（税込）</text>
