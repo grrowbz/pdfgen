@@ -67,8 +67,8 @@ class CNodeClass():
 
 	def x(cls): return cls.__getAttrIntValue('position_x')
 	def y(cls): return cls.__getAttrIntValue('position_y')
-	def width(cls): return cls.__getAttrIntValue('width')
-	def height(cls): return cls.__getAttrIntValue('height')
+	def width(cls): return cls.__getAttrIntValue('width') if cls.isExists('width') else 0
+	def height(cls): return cls.__getAttrIntValue('height') if cls.isExists('height') else 0
 	def getPosition(cls): return [cls.x(), cls.y()]
 	def size(cls): return cls.__getExtraAttrValue("int", 'size')
 

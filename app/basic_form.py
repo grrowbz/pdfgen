@@ -148,15 +148,22 @@ class BasicForm(object):
 		_color	= nd.borderColor() if nd.isExists('border_color') else [0, 0, 0]
 		_style	= nd.borderStyle() if nd.isExists('border_style') else False
 
-		if nd.hasExists(['border_top', 'border_bottom']):
+		if nd.hasExists(['border_top', 'border_bottom', 'border']):
 			for attr in nd.getAttrib():
 				### border_topの場合、yPosから高さ分引く必要がある。
-				if attr == 'border_top': 
+				if attr in ['border_top', 'border']: 
 					cls.draw.line(x, y, nd.width(), nd.borderTop(), _color)
-				elif attr == 'border_bottom': 
-					cls.draw.line(x, y, nd.width(), nd.borderBottom(), _color)
+
+				if attr in ['border_bottom', 'border']: 
+					cls.draw.line(x, y + nd.height(), nd.width(), nd.borderBottom(), _color)
 					if _style == "double":
-						cls.draw.line(x, y+2, nd.width(), nd.borderTop(), _color)
+						cls.draw.line(x, y + nd.height() + 2, nd.width(), nd.borderTop(), _color)
+
+				if attr in ['border_left', 'border']: 
+					cls.draw.vline(x, y + nd.height(), nd.height(), 1, _color)
+
+				if attr in ['border_right', 'border']: 
+					cls.draw.vline(x + nd.width(), y + nd.height(), nd.height(), 1, _color)
 
 	def __attribPadding(cls, nd, type="None"):
 		x, y	= cls.getCursor()
@@ -175,8 +182,9 @@ class BasicForm(object):
 			
 		
 	def __childNodeParser(cls, nd, font, font_size,font_color):
-		setter		= cls.setter
-		eol_flag	= ""
+		setter	= cls.setter
+ 		x, y	= cls.getCursor()
+		cls.setCursor(x, y +cls.text.getFontHeight())
 		
 		for e in nd.getChildNodes():
 			cN		= CNodeClass(e)
@@ -197,10 +205,8 @@ class BasicForm(object):
 			elif e.tag == 'br':
 				x, y = cls.backCursor().getCursor()
 				cls.setCursor(x, y + cls.text.getFontHeight())
-			eol_flag	= e.tag	
 		else:
 			cls.text.flush()
-
 
 	### 文字列（テキスト領域）描画メソッド
 	def renderTextArea(cls, node):
