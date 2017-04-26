@@ -3,9 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <title>HTMLファイルからPOSTでJSONデータを送信する</title>
-<!-- <script type="text/javascript" src="http://192.168.33.1:8080/js/jquery.min.js"></script> -->
-<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
-
+<script type="text/javascript" src="/js/jquery.min.js"></script>
 <script type="text/javascript">
 
 function export_pdf(url, post_data) {
@@ -31,7 +29,7 @@ function export_pdf(url, post_data) {
             var file = new Blob([response_data], {type: 'application/pdf'});
             var url = URL.createObjectURL(file);
             w.location.href = url;
-            w.revokeObjectURL(url);
+            w.URL.revokeObjectURL(url);
         };
     };
 };

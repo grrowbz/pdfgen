@@ -96,6 +96,8 @@ class CNodeClass():
 	def borderStyle(cls): return cls.__getExtraAttrValue("str", 'border_style')
 	def borderBottom(cls): return cls.__getExtraAttrValue("int", 'border_bottom')
 	def borderTop(cls): return cls.__getExtraAttrValue("int", 'border_top')
+	def borderLeft(cls): return cls.__getExtraAttrValue("int", 'border_left')
+	def borderRight(cls): return cls.__getExtraAttrValue("int", 'border_right')
 
 	def summary(cls): return cls.__getExtraAttrValue("str", 'summary')
 	def font(cls): return cls.__getExtraAttrValue("str", 'font')
