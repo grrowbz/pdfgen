@@ -54,7 +54,7 @@ def lambda_handler(event, context):
     subtotal = 0
     if context['item_data'] :
         p = json.loads(context['item_data'])
-        for x in range(1,21):
+        for x in range(1,22):
             if( p.has_key(unicode(x)) ):
                 if (p[unicode(x)].has_key(u'qty')):
                     subtotal += int(p[unicode(x)][u'price'])

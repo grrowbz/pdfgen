@@ -3,7 +3,6 @@
 # vim:set ts=4 sw=4 expandtab fenc=utf-8:
 #
 import falcon
-from falcon_cors import CORS
 import os, sys, json
 
 path = os.path.dirname(__file__)
@@ -11,12 +10,18 @@ sys.path.append(os.path.join(path, '../app/'))
 
 from generate_pdf import *
 
+class ExtensionComponent(object):
+
+    def process_request(self, req, resp):
+        resp.set_header('Access-Control-Allow-Origin', 'http://192.168.1.5:4200');
+        resp.set_header('Access-Control-Allow-Methods', 'POST, GET, OPTIONS');
+        resp.set_header('Access-Control-Allow-Headers', 'Origin, Content-Type');
+        resp.set_header('Access-Control-Max-Age', '86400');
+
 def before_resource(req, resp, resource, params):
     print('Headers : ' + str(req.headers))
     print("Params  : " + str(req.params))
     print("Cookies : " + str(req.cookies))
-#    if req.method == 'POST':
-#        print("Body    : " + req.stream.read());
 
 @falcon.before(before_resource)
 class HelloResource(object):
@@ -45,8 +50,7 @@ class PdfGenerator(object):
         event = { "test" : "test", "hoge" : "hoge" }
         resp.body = lambda_handler(event, json.loads(requestBody));
 
-cors    = CORS(allow_all_origins=True);
-app     = falcon.API(middleware=[cors.middleware]);
+app = falcon.API(middleware=ExtensionComponent());
 
 falcon.RequestOptions.auto_parse_form_urlencoded = True
 app.add_route("/", HelloResource())
