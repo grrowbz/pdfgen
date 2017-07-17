@@ -10,6 +10,14 @@ sys.path.append(os.path.join(path, '../app/'))
 
 from generate_pdf import *
 
+class ExtensionComponent(object):
+
+    def process_request(self, req, resp):
+        resp.set_header('Access-Control-Allow-Origin', 'http://192.168.1.5:4200');
+        resp.set_header('Access-Control-Allow-Methods', 'POST, GET, OPTIONS');
+        resp.set_header('Access-Control-Allow-Headers', 'Origin, Content-Type');
+        resp.set_header('Access-Control-Max-Age', '86400');
+
 def before_resource(req, resp, resource, params):
     print('Headers : ' + str(req.headers))
     print("Params  : " + str(req.params))
@@ -37,7 +45,8 @@ class PdfGenerator(object):
         event = { "test" : "test", "hoge" : "hoge" }
         resp.body = lambda_handler(event, json.loads(req.stream.read().decode('utf-8')))
 
-app = falcon.API()
+app = falcon.API(middleware=ExtensionComponent());
+
 falcon.RequestOptions.auto_parse_form_urlencoded = True
 app.add_route("/", HelloResource())
 app.add_route("/generate", PdfGenerator())
@@ -45,6 +54,6 @@ app.add_route("/generate", PdfGenerator())
 if __name__ == "__main__":
 
     from wsgiref import simple_server
-    httpd = simple_server.make_server("0.0.0.0", 8000, app)
+    httpd = simple_server.make_server("0.0.0.0", 8888, app)
     httpd.serve_forever()
 
