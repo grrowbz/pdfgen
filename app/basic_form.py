@@ -148,7 +148,7 @@ class BasicForm(object):
 
     def setPrice(cls, title, price):
         subtotal    = int(price)
-        tax         = int(subtotal * 0.08)
+        tax         = int(round(subtotal * 0.08))
         price       = subtotal + tax
 
         cls.setFont("Regular",10,[0.25,0.25,0.25])
