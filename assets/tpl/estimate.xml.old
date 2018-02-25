@@ -10,70 +10,10 @@
 
 	<doc page_size="HPDF_PAGE_SIZE_A4" landscape="HPDF_PAGE_PORTRAIT" language="JP">
 
-		<text font="regular" size="16" color="ffffff" align="center"
-				position_x="0" position_y="47">
-				御　請　求　書
-		</text>
-
-		<textarea	font="Small" summary="見積No" width="30" height="12" 
-					position_x="445" position_y="50">
-				<text align="right" padding_right="4">見積No：</text>
-				<text>PR</text>
-				<placeholder name="project_no" type="string" />
-		</textarea>
-		<textarea font="Regular" position_x="25" position_y="87" summary="見積りのご案内">
+		<textarea font="Regular" position_x="25" position_y="87" width="150" height="50"
+				summary="見積りのご案内" border_bottom="1" border_color="666666">
 			<text>下記の通りお見積り致しますので、</text><br />
 			<text>よろしくお願い申し上げます。</text>
-		</textarea> 
-
-		<textarea font="Bold" summary="社名タイトル" position_x="422" position_y="95">
-			<text>株式会社</text>
-			<text>Grrow</text>
-		</textarea>
-
-		<textarea font="Regular" summary="住所署名" position_x="400" position_y="108" width="160">
-			<text align="right">〒140-0001 東京都品川区北品川</text><br />
-			<text align="right">1−9−7 トップルーム品川1015</text><br />
-			<text align="right">TEL：090-2420-2989</text>
-		</textarea>
-
-		<textarea font="Regular" position_x="410" position_y="149" 
-					width="75" height="65" border="1" border_color="666666">
-		</textarea>
-		<textarea font="Small" position_x="410" position_y="149" 
-					width="75" height="15" border="1" border_color="666666">
-			<text align="center">承認者</text>
-		</textarea>
-		<textarea font="Regular" position_x="485" position_y="149" 
-					width="75" height="65" border="1" border_color="666666">
-		</textarea>
-		<textarea font="Small" position_x="485" position_y="149" 
-					width="75" height="15" border="1" border_color="666666">
-			<text align="center">担当者</text>
-		</textarea>
-
-		<textarea	font="Small" position_x="25" position_y="137" width="290" height="11"
-					summary="納入期限欄" padding_bottom="4" border_bottom="1" border_color="666666">
-			<text padding_right="4">納 入 期 限 　 ：</text>
-			<placeholder name="delivery_deadline" type="string" />
-		</textarea>
-		<textarea	font="Small" position_x="25" position_y="154" width="290" height="11"
-					summary="納入方式欄" padding_bottom="4" border_bottom="1" border_color="666666">
-			<text padding_right="4">納 入 方 式 　 ：</text>
-			<placeholder name="delivery_method" type="string" />
-		</textarea>
-		<textarea	font="Small" position_x="25" position_y="170" width="290" height="11"
-					summary="御支払条件" padding_bottom="4" border_bottom="1" border_color="666666">
-			<text padding_right="4">御 支 払 条 件 ：</text>
-			<placeholder name="payment_terms" type="string" />
-		</textarea>
-
-		<textarea	font="Regular" font_size="13" summary="合計金額欄"
-					position_x="25" position_y="198" width="290" height="13"
-					padding_bottom="4" border_bottom="1" border_color="666666"
-					border_style="double">
-			<text>お見積金額（税込）</text>
-			<!-- <placeholder name="estimate_total" type="string" /> -->
 		</textarea> 
 
 	</doc>

@@ -212,7 +212,8 @@ class BasicForm(object):
 							### ヘッダーのテキストを描画
 							cls.text.put(unicode(cell.text)).\
 								write_with_align('center', cWidth,\
-								vertPos, yPos + cHeight - 2).flush()
+								##vertPos, yPos + cHeight - 2).flush()
+								vertPos, linePos + cHeight - 2).flush()
 
 							cls.draw.rect(	vertPos, linePos, cWidth, cHeight,\
 								1, [0.27, 0.27, 0.27])
