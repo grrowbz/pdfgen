@@ -4,7 +4,7 @@
 <content name="見積書テンプレート">
     <head>
         <font name="ES_Regular" size="9.5" color="333333" src="../font/GenShinGothic-P-Regular.ttf" />
-        <font name="Bold" size="16" color="333333" src="../font/GenShinGothic-P-Bold.ttf" />
+        <font name="Bold" size="12" color="333333" src="../font/GenShinGothic-P-Bold.ttf" />
         <font name="Heavy" size="19" color="333333" src="../font/GenShinGothic-P-Heavy.ttf" />
     </head>
 
@@ -21,7 +21,9 @@
 				<text>PR</text>
 				<placeholder name="project_no" type="string" />
 		</textarea>
-		<textarea font="Regular" position_x="25" position_y="87" summary="見積りのご案内">
+		<textarea font="Regular" position_x="25" position_y="87" width="150"
+				summary="見積りのご案内" border="1" border_color="666666" padding_top="5"
+				padding_bottom="5">
 			<text>下記の通りお見積り致しますので、</text><br />
 			<text>よろしくお願い申し上げます。</text>
 		</textarea> 

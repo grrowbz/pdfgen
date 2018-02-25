@@ -40,9 +40,9 @@ class BasicForm(object):
 		cls.text.open_font(ph['font']).set_style(ph['size'],ph['color'])
 		cls.text.put(ctx).write(ph['x'], ph['y']).flush()
 
-	##################################
-	#### renderメソッド系
-	#################################
+########################################################
+### renderメソッド（コアメソッド）
+########################################################
 
 	def parseHeader(cls, node):
 		for e in list(node):
@@ -98,30 +98,58 @@ class BasicForm(object):
 			### デバッグメッセージの表示
 			print msgLog
 
+########################################################
+###		Attribute 解析メソッド
+###		主にタグ 解析メソッドからの呼び出し
+########################################################
+
 	#### 属性値:border、border_style、border_colorの処理
 	def __attribBorder(cls, nd):
-		x, y	= cls.util.getCursor()
+		_width, _height, _draw_method	= nd.width(), nd.height(), "line"
 
+		### height指定がない場合は中のテキストオブジェクトの高さをベースに計算
+		if nd.hasExists(["height"]) == False: 
+			_height		= cls.text.getFontHeight(nd.fontSize() \
+							if nd.isExists('font_size') else cls.font[nd.font()]["size"])
+			for e in nd.getChildNodes():
+				if e.tag == "br": _height += cls.text.getFontHeight(nd.fontSize() \
+									if nd.isExists('font_size') else cls.font[nd.font()]["size"])
 		### Borderのカラー設定
 		_color	= nd.borderColor() if nd.isExists('border_color') else [0, 0, 0]
 		_style	= nd.borderStyle() if nd.isExists('border_style') else False
 
-		if nd.hasExists(['border_top', 'border_bottom', 'border']):
-			for attr in nd.getAttrib():
-				### border_topの場合、yPosから高さ分引く必要がある。
-				if attr in ['border_top', 'border']: 
-					cls.draw.line(x, y, nd.width(), nd.borderTop(), _color)
+		if nd.hasExists(['border_top', 'border_bottom', 'border', 'border_left', 'border_right']):
+			_attributes		= ['border_top', 'border_bottom', 'border_left', 'border_right']\
+								if nd.hasExists(['border']) else nd.getAttrib() 
+			for attr in _attributes:
+				_xPos, _yPos	= cls.util.getCursor()
+				_size			= 0
 
-				if attr in ['border_bottom', 'border']: 
-					cls.draw.line(x, y + nd.height(), nd.width(), nd.borderBottom(), _color)
-					if _style == "double":
-						cls.draw.line(x, y + nd.height() + 2, nd.width(), nd.borderTop(), _color)
+				if attr == 'border_top': 
+					cls.__attribPadding(nd, 'Before')
+					_size, _length, _draw_method	= nd.borderTop(), _width, "line"
 
-				if attr in ['border_left', 'border']: 
-					cls.draw.vline(x, y + nd.height(), nd.height(), 1, _color)
+				elif attr == 'border_bottom': 
+					_size, _length, _draw_method	= nd.borderBottom(), _width, "line"
+					_yPos	+= _height
 
-				if attr in ['border_right', 'border']: 
-					cls.draw.vline(x + nd.width(), y + nd.height(), nd.height(), 1, _color)
+				elif attr == 'border_left': 
+					_size, _length, _draw_method	= nd.borderLeft(), _height, "vline"
+					_yPos	+= _height
+
+				elif attr == 'border_right': 
+					_size, _length, _draw_method	= nd.borderRight(), _height, "vline"
+					_xPos	+= _width
+					_yPos	+= _height
+
+				if nd.hasExists(['border']): _size = nd.border()
+
+				if (_size):
+					eval("cls.draw." + _draw_method)(_xPos, _yPos, _length, _size, _color)
+					if (_style == "double"): 
+						if (_draw_method == "line"): _yPos += 1.7
+						elif(_draw_method == "vline"): _xPos += 1.7
+						eval("cls.draw." + _draw_method)(_xPos, _yPos, _length, _size, _color)
 
 	def __attribPadding(cls, nd, type="None"):
 		x, y	= cls.util.getCursor()
@@ -140,11 +168,12 @@ class BasicForm(object):
 				for attr in nd.getAttrib():
 					if attr == 'padding_right': cls.util.setCursor(x + nd.paddingRight(), y)
 			
-		
+	#### 内部ノードのパーサーメソッド
+	#### 2017/4/23:今のところはrenderTextAreaメソッドからの呼び出しのみ
 	def __childNodeParser(cls, nd, font, font_size,font_color):
 		setter	= cls.setter
  		x, y	= cls.util.getCursor()
-		cls.util.setCursor(x, y +cls.text.getFontHeight())
+		cls.util.setCursor(x, y +cls.text.getFontHeight(font_size))
 		
 		for e in nd.getChildNodes():
 			cN		= CNodeClass(e)
@@ -163,18 +192,21 @@ class BasicForm(object):
 				setter.setPlaceHolder(cN.name(), x, y, nd.width(), cN.type(), font, font_size, font_color)
 			elif e.tag == 'br':
 				x, y = cls.util.backCursor().getCursor()
-				cls.util.setCursor(x, y + cls.text.getFontHeight())
+				cls.util.setCursor(x, y + cls.text.getFontHeight(font_size))
 			cls.__attribPadding(cN, 'After')
 		else:
 			cls.text.flush()
 
-	### 文字列（テキスト領域）描画メソッド
+#######################################################################
+###		タグの解析メソッド
+#######################################################################
+
+	#################################################3
+	### 文字列（テキスト領域）描画メソッド 
+	### <textarea>タグの出現時に呼び出される。　
 	def renderTextArea(cls, node):
 		nd			= CNodeClass(node)
 		xPos, yPos	= cls.util.setCursor(nd.getPosition()).getCursor()
-
-		cls.__attribBorder(nd)		 ### attribute border process
-		cls.__attribPadding(nd)		 ### attribute padding process
 
 		if nd.isExists('auto_reduced'):
 			pass
@@ -184,9 +216,14 @@ class BasicForm(object):
 		font_color		= nd.fontColor() if nd.isExists('font_color') else cls.font[nd.font()]["color"]
 
 		cls.text.open_font(font).set_style(font_size,font_color)
+
+		cls.__attribBorder(nd)		 ### attribute border process
 		cls.__childNodeParser(nd, font, font_size, font_color)
 
+
+	#################################################3
 	### 線表描画メソッド
+	### <table>タグの出現時に呼び出される
 	def renderTable(cls, node):
 		nd			= CNodeClass(node)
 		tPos, yPos	= nd.getPosition()

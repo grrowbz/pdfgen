@@ -37,10 +37,19 @@ class PdfGenerator(object):
         event = { "test" : "test", "hoge" : "hoge" }
         resp.body = lambda_handler(event, json.loads(req.stream.read().decode('utf-8')))
 
+@falcon.before(before_resource)
+class jsResource(object):
+    def on_get(self, req, resp, filename):
+        resp.status = falcon.HTTP_200
+        resp.content_type = 'application/javascript'
+        with open(os.path.join(path + "/js/", filename), 'r') as f:
+            resp.body = f.read()
+
 app = falcon.API()
 falcon.RequestOptions.auto_parse_form_urlencoded = True
 app.add_route("/", HelloResource())
 app.add_route("/generate", PdfGenerator())
+app.add_route("/js/{filename}", jsResource())
 
 if __name__ == "__main__":
 
