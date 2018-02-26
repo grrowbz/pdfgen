@@ -36,18 +36,18 @@
 			<tr height="12">
 				<th width="25">No</th>
 				<th width="280">商品及び明細</th>
-				<th width="50">数量</th>
-				<th width="35">単位</th>
-				<th width="60">単価</th>
-				<th width="90">金額</th>
+				<th width="35">数量</th>
+				<th width="40">単位</th>
+				<th width="65">単価</th>
+				<th width="95">金額</th>
 			</tr>
 			<tr height="15" border="dash" for="26">
 				<td width="25"></td>
 				<td width="280"></td>	
-				<td width="50"></td>
 				<td width="35"></td>
-				<td width="60"></td>
-				<td width="90"></td>
+				<td width="40"></td>
+				<td width="65"></td>
+				<td width="95"></td>
 			</tr>
 		</table>
 		<hr position_x="25" position_y="626" width="540" summary="アイテムリストの境界線" />
@@ -56,7 +56,7 @@
 					border="1" border_color="666666">
 				<text align="center">納品物</text>
 		</textarea>
-		<textarea font="Regular" position_x="75" position_y="628" width="270" height="66" 
+		<textarea font="Regular" position_x="75" position_y="628" width="255" height="66" 
 					border="1" border_color="666666">
 		</textarea>
 		<table position_x="345" position_y="628" width="130" height="66" border_color="666666" summary="小計/合計">
