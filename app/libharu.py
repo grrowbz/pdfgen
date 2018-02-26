@@ -8,7 +8,7 @@
 import os, sys
 from ctypes import *
 sys.path.append('./haru/lib')
-os.environ["PATH"] = os.environ.get("PATH") + ":" + os.getcwd() + "/haru/lib"
+os.environ["PATH"] = os.environ.get("PATH") + ":" + os.path.dirname(__file__) + "/haru/lib"
 
 from haru import *
 from haru.c_func import *
