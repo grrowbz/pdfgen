@@ -13,11 +13,11 @@ from generate_pdf import *
 class ExtensionComponent(object):
 
     def process_request(self, req, resp):
-        resp.set_header('Access-Control-Allow-Origin', 'http://192.168.1.5:4200');
+        resp.set_header('Access-Control-Allow-Origin', '*');
         resp.set_header('Access-Control-Allow-Methods', 'POST, GET, OPTIONS');
         resp.set_header('Access-Control-Allow-Headers', 'Origin, Content-Type');
         resp.set_header('Access-Control-Max-Age', '86400');
-
+    
 def before_resource(req, resp, resource, params):
     print('Headers : ' + str(req.headers))
     print("Params  : " + str(req.params))

@@ -98,10 +98,10 @@ class BasicForm(object):
         ## company information
         KABU            = u'株式会社'
         COMPANY_NAME	= u'Grrow'
-        POST_NO			= u'〒140-001'
-        ADRESS_1		= u'東京都品川区北品川'
-        ADRESS_2		= u'1-9-7 トップルーム品川1015'
-        PHONE_NO		= u'TEL：090-2420-2989'
+        POST_NO			= u'〒110-0005'
+        ADRESS_1		= u'東京都台東区上野'
+        ADRESS_2		= u'3-17-2 幸和ビル4階'
+        PHONE_NO		= u'TEL：03-3836-5881'
 
         cls.text.open_font(cls.font["Bold"]).set_style(16,[0.25,0.25,0.25])
         cls.text.put(KABU).write(cls.haru.getX() - 192, 149).flush()
@@ -109,8 +109,8 @@ class BasicForm(object):
         cls.text.put(COMPANY_NAME).write(cls.haru.getX() - 126, 149).flush()
 
         cls.text.open_font(cls.font["Regular"]).set_style(11,[0.25,0.25,0.25])
-        cls.text.put(ADRESS_1).write(cls.haru.getX() - 132, 166).flush()
-        cls.text.put(ADRESS_2).write(cls.haru.getX() - 166, 179).flush()
+        cls.text.put(ADRESS_1).write(cls.haru.getX() - 123, 166).flush()
+        cls.text.put(ADRESS_2).write(cls.haru.getX() - 129, 179).flush()
 
         cls.setFont("Regular", 9.5,[0.25,0.25,0.25])
         ## 郵便番号の出力位置表示 画面サイズX幅 - 132 - 45
