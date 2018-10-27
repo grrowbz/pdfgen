@@ -5,7 +5,7 @@
 
 import os, sys
 import libharu
-import invoice_form, estimate_form, purchase_order_form
+import invoice_form, estimate_form, purchase_order_form, confirmation_order_form
 import json
 
 def lambda_handler(event, context):
@@ -37,7 +37,7 @@ def lambda_handler(event, context):
     else:
         form.setProjectNumber(context['project_no'])
 
-    if context['template'] in ["estimate", "purchase_order"]:
+    if context['template'] in ["estimate", "purchase_order", "confirmation_order"]:
         form.setDeliveryDeadline(context['delivery_deadline'])
         form.setDeliveryMethod(context['delivery_method'])
         form.setPaymentTerms(context['payment_terms'])
