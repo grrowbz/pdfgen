@@ -1,0 +1,7 @@
+version: '3'
+services:
+  lambda-with-c-compiler:
+    build: .
+    volumes:
+      - ./bin:/var/tmp
+    command: /bin/bash -c 'cp -r  app/haru /var/tmp'

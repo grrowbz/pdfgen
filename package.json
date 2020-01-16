@@ -1,0 +1,25 @@
+{
+  "name": "pytemp",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tamamushi/pdfgen.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/tamamushi/pdfgen/issues"
+  },
+  "homepage": "https://github.com/tamamushi/pdfgen#readme",
+  "devDependencies": {
+    "serverless": "^1.61.1"
+  },
+  "dependencies": {
+    "serverless-python-requirements": "^5.0.1"
+  }
+}
