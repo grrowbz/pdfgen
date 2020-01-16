@@ -22,4 +22,5 @@
   "dependencies": {
     "serverless-python-requirements": "^5.0.1"
   }
+
 }

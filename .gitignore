@@ -23,5 +23,6 @@ var/
 
 /app/haru
 /node_modules
+
 # Serverless directories
 .serverless
