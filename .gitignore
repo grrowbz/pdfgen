@@ -17,6 +17,9 @@ var/
 .installed.cfg
 *.egg
 
+/tools/tmp
+/tools/bin
+
 .requirements.zip
 /tmp/*
 !/tmp/.gitkeep
