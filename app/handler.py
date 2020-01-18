@@ -4,6 +4,7 @@
 #
 
 import os, sys
+sys.path.append('./')
 import libharu
 import invoice_form, estimate_form, purchase_order_form
 import json
@@ -12,48 +13,58 @@ def lambda_handler(event, context):
 
     ## 必須な値のチェックと足りない場合にエラー
     ## を返す処理 2016/10/31 未実装
-    ## context['template'] は必須
+    ## event['template'] は必須
 
     haru        = libharu.LibHaru()
-    module_name = context['template'] + "_form"
+    params      = json.loads(event['body'])
+
+    module_name = params['template'] + "_form"
     class_name  = ''.join(map(lambda n:n[0].upper() + n[1:], module_name.split("_")))
 
     ## 無効なモジュール名の呼び出しを検出して、エラーを
     ## 返す処理を前段で入れる 2016/10/31 未実装
-    form        = getattr(sys.modules[module_name], class_name)(haru)
+    form        = getattr(sys.modules['app.' + module_name], "InvoiceForm")(haru)
 
     '''
     メソッドの自動呼び出しを実装中。とりあえず一旦中止
-    for attr in filter(lambda x: x != 'template',context.keys()):
+    for attr in filter(lambda x: x != 'template',params.keys()):
         method  = 'set'+''.join(map(lambda n:n[0].upper() + n[1:], attr.split("_")))
         if hasattr(form, method):
-            getattr(form, method)(context[attr])
+            getattr(form, method)(params[attr])
             print method
     '''
 
-    if context['template'] == "invoice":
-        form.setProjectNumber(context['project_no'], context['order_no'])
-        form.setOrderNumber(context['order_no'])
+    return {
+        'isBase64Encoded': False,
+        'statusCode': 200,
+        'headers': {},
+        'body': '{"message": "Hello from AWS Lambda"}'
+    }
+
+
+    if params['template'] == "invoice":
+        form.setProjectNumber(params['project_no'], params['order_no'])
+        form.setOrderNumber(params['order_no'])
     else:
-        form.setProjectNumber(context['project_no'])
+        form.setProjectNumber(params['project_no'])
 
-    if context['template'] in ["estimate", "purchase_order"]:
-        form.setDeliveryDeadline(context['delivery_deadline'])
-        form.setDeliveryMethod(context['delivery_method'])
-        form.setPaymentTerms(context['payment_terms'])
-    elif context['template'] == "invoice":
-        form.setTermLimit(context['term_limit'])
+    if params['template'] in ["estimate", "purchase_order"]:
+        form.setDeliveryDeadline(params['delivery_deadline'])
+        form.setDeliveryMethod(params['delivery_method'])
+        form.setPaymentTerms(params['payment_terms'])
+    elif params['template'] == "invoice":
+        form.setTermLimit(params['term_limit'])
  
-    form.setCreateDate(context['create_date'])
-    form.setClientName(context['client_name'])
-    form.setTitle(context['title'])
+    form.setCreateDate(params['create_date'])
+    form.setClientName(params['client_name'])
+    form.setTitle(params['title'])
 
-    form.setDeliverables(context['deliverables'])
-    form.setRemarksColumn(context['remarks_column'])
+    form.setDeliverables(params['deliverables'])
+    form.setRemarksColumn(params['remarks_column'])
 
     subtotal = 0
-    if context['item_data'] :
-        p = json.loads(context['item_data'])
+    if params['item_data'] :
+        p = json.loads(params['item_data'])
         for x in range(1,22):
             if( p.has_key(unicode(x)) ):
                 if (p[unicode(x)].has_key(u'qty')):
