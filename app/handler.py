@@ -5,9 +5,10 @@
 
 import os, sys
 sys.path.append('./')
-import libharu
-import invoice_form, estimate_form, purchase_order_form
+from . import libharu
+from . import invoice_form, estimate_form, purchase_order_form
 import json
+import base64
 
 def lambda_handler(event, context):
 
@@ -33,14 +34,6 @@ def lambda_handler(event, context):
             getattr(form, method)(params[attr])
             print method
     '''
-
-    return {
-        'isBase64Encoded': False,
-        'statusCode': 200,
-        'headers': {},
-        'body': '{"message": "Hello from AWS Lambda"}'
-    }
-
 
     if params['template'] == "invoice":
         form.setProjectNumber(params['project_no'], params['order_no'])
@@ -78,10 +71,15 @@ def lambda_handler(event, context):
                 else:
                     form.setItemDataForOnlySubTitle(   x, x, p[unicode(x)][u'item'])
     form.setPrice(subtotal)
-
     form.createObject().save('/tmp/.tmp.pdf')
+
     with open('/tmp/.tmp.pdf', 'r') as f:
-        return f.read()
+        return {
+            'isBase64Encoded': True,
+            'statusCode': 200,
+            'headers': { "content-type": "application/pdf" },
+            'body': base64.b64encode( f.read()), 
+        }
     ## ここはちゃんと動作する？要確認
     haru.close()
     f.close()

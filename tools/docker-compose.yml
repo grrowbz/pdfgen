@@ -3,5 +3,5 @@ services:
   compile-lambda:
     build: .
     volumes:
-      - ./bin:/work/build/tmp
-    command: /bin/bash -c 'cp -r  ./app/haru ./tmp'
+      - ../app:/work/build/app
+    command: /bin/bash -c 'cp -r  /work/app/haru/ ./app'

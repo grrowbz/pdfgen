@@ -2,7 +2,7 @@ service: pytemp
 provider:
   name: aws
   region: ap-northeast-1
-  runtime: python3.5
+  runtime: python2.7
   profile: ${env:AWS_PROFILE,'default'}
 
 functions:
@@ -12,15 +12,26 @@ functions:
       - http:
           path: /generate
           method: post
+          integration: lambda
+	  response:
+            contentHandling: CONVERT_TO_BINARY
+            headers:
+              Content-Type: 'application/pdf'
 
 plugins:
   - serverless-python-requirements
+  - serverless-offline-python
+  - serverless-apigw-binary
 
 custom:
   pythonRequirements:
     dockerizePip: non-linux
     slim: true
     zip: true
+  apigwBinary:
+    types:
+      - 'application/pdf'
+      - 'application/json'
 
 package:
   include:
