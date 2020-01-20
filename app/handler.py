@@ -3,12 +3,16 @@
 # vim:set ts=4 sw=4 expandtab fenc=utf-8:
 #
 
-import os, sys
-sys.path.append('./')
-from . import libharu
-from . import invoice_form, estimate_form, purchase_order_form
-import json
-import base64
+import os, sys, ctypes
+from app import libharu
+from app import invoice_form
+## import app.estimate_form as estimate_form
+## import app.purchase_order_form as purchase_order_form
+import json, base64, logging
+
+ctypes.cdll.LoadLibrary(os.path.join('lib/', 'libpng15.so.15'))
+logger = logging.getLogger()
+logger.setLevel(logging.INFO)
 
 def lambda_handler(event, context):
 
@@ -17,14 +21,20 @@ def lambda_handler(event, context):
     ## event['template'] は必須
 
     haru        = libharu.LibHaru()
-    params      = json.loads(event['body'])
+    _params     = event['body'] if event.get('body') else event
+    params      = _params
 
     module_name = params['template'] + "_form"
     class_name  = ''.join(map(lambda n:n[0].upper() + n[1:], module_name.split("_")))
 
+    logger.info("テンプレートモジュールの読込開始")
+
     ## 無効なモジュール名の呼び出しを検出して、エラーを
     ## 返す処理を前段で入れる 2016/10/31 未実装
     form        = getattr(sys.modules['app.' + module_name], "InvoiceForm")(haru)
+
+    logger.info("テンプレートモジュールの読込完了")
+    logger.info(module_name)
 
     '''
     メソッドの自動呼び出しを実装中。とりあえず一旦中止
@@ -77,8 +87,11 @@ def lambda_handler(event, context):
         return {
             'isBase64Encoded': True,
             'statusCode': 200,
-            'headers': { "content-type": "application/pdf" },
-            'body': base64.b64encode( f.read()), 
+            'headers': { 
+                "access-control-allow-origin" : '*',
+                "content-type": "application/pdf" 
+            },
+            'body': base64.b64encode( f.read()).decode('utf-8') 
         }
     ## ここはちゃんと動作する？要確認
     haru.close()

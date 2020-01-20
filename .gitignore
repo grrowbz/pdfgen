@@ -26,6 +26,8 @@ var/
 
 /app/haru
 /node_modules
+/lib/*
+!/lib/.gitkeep
 
 # Serverless directories
 .serverless

@@ -13,31 +13,37 @@ functions:
           path: /generate
           method: post
           integration: lambda
-	  response:
+          response:
             contentHandling: CONVERT_TO_BINARY
-            headers:
-              Content-Type: 'application/pdf'
-
 plugins:
+  - serverless-prune-plugin
   - serverless-python-requirements
   - serverless-offline-python
   - serverless-apigw-binary
+  - serverless-apigwy-binary
 
 custom:
   pythonRequirements:
-    dockerizePip: non-linux
+    dockerizePip: true 
     slim: true
     zip: true
   apigwBinary:
     types:
-      - 'application/pdf'
-      - 'application/json'
+      - "application/pdf"
+      - "application/json"
+  prune:
+    automatic: true
+    number: 3
 
 package:
   include:
     - app/*
+    - lib/*
     - fonts/**
   exclude:
+    - .python-version
+    - app/*.pyc
+    - app/haru/*.pyc
     - node_modules/**
     - package.json
     - package-lock.json

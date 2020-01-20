@@ -6,9 +6,9 @@
 #
 
 import os, sys
-from basic_form import *
+from app.basic_form import *
+from app.libharu import *
 from ctypes import *
-from libharu import *
 
 class InvoiceForm(BasicForm):
 

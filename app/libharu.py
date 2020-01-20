@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # vim:set ts=4 fenc=utf-8:
 #
-# libharu pdf library wrapper for python -- libharu.py
+# libharu pdf library wrapper for python -- pyharu.py
 #
 
 import os, sys
@@ -10,10 +10,9 @@ from ctypes import *
 sys.path.append('./haru/lib')
 os.environ["PATH"] = os.environ.get("PATH") + ":" + os.getcwd() + "/haru/lib"
 
-from haru import *
-from haru.c_func import *
-from haru.hpdf_errorcode import *
-
+from app.haru import *
+from app.haru.c_func import *
+from app.haru.hpdf_errorcode import *
 
 class LibHaru():
 
@@ -179,7 +178,7 @@ class HaruText(SuperHaruObject):
             w = HPDF_Page_GetCurrentFontSize(cls.page())
             HPDF_Page_SetFontAndSize (cls.page(), cls.__font, (w-1))
             char_w = HPDF_Page_TextWidth(cls.page(), ''.join(cls.__text))
-        print char_w
+        print(char_w)
         return cls
 
     def write_with_align(cls, pos, width, x, y, _indent = 0):

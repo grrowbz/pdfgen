@@ -4,4 +4,7 @@ services:
     build: .
     volumes:
       - ../app:/work/build/app
-    command: /bin/bash -c 'cp -r  /work/app/haru/ ./app'
+      - ../lib:/work/build/lib
+    command: > 
+     /bin/bash -c 'cp -r  /work/app/haru/ ./app &&
+     cp /usr/lib64/libpng15.so.15 ./lib'
