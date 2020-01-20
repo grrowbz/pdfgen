@@ -19,6 +19,7 @@ var/
 
 /tools/tmp
 /tools/bin
+/app/test.py
 
 .requirements.zip
 /tmp/*

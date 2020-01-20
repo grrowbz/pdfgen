@@ -6,6 +6,20 @@ provider:
   profile: ${env:AWS_PROFILE,'default'}
 
 functions:
+  test-get:
+    handler: app/test.lambda_handler
+    events:
+      - http:
+          path: /test
+          method: get
+          integration: lambda
+  test-post:
+    handler: app/test.lambda_handler
+    events:
+      - http:
+          path: /test
+          method: post
+          integration: lambda
   pytemp:
     handler: app/handler.lambda_handler
     events:
