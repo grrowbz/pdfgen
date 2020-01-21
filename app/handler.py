@@ -9,6 +9,7 @@ from app import invoice_form
 ## import app.estimate_form as estimate_form
 ## import app.purchase_order_form as purchase_order_form
 import json, base64, logging
+import boto3
 
 ctypes.cdll.LoadLibrary(os.path.join('lib/', 'libpng15.so.15'))
 logger = logging.getLogger()
@@ -83,7 +84,12 @@ def lambda_handler(event, context):
     form.setPrice(subtotal)
     form.createObject().save('/tmp/.tmp.pdf')
 
+    s3 = boto3.resource('s3')
+    bucket = s3.resource(BucketName)
+
     with open('/tmp/.tmp.pdf', 'r') as f:
+
+
         return {
             'isBase64Encoded': True,
             'statusCode': 200,
