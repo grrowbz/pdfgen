@@ -82,22 +82,21 @@ def lambda_handler(event, context):
                 else:
                     form.setItemDataForOnlySubTitle(   x, x, p[unicode(x)][u'item'])
     form.setPrice(subtotal)
-    form.createObject().save('/tmp/.tmp.pdf')
+    form.createObject().save('/tmp/example.pdf')
 
     s3 = boto3.resource('s3')
-    bucket = s3.resource(BucketName)
+    bucket = s3.resource("grrow.in")
 
-    with open('/tmp/.tmp.pdf', 'r') as f:
+    with open('/tmp/example.pdf', 'r') as f:
 
+        bucket.put(
+            body = f.read().encode('utf-8')
+            ContentEncoding='utf-8',
+            ContentType='application/pdf'
+        )
 
         return {
-            'isBase64Encoded': True,
-            'statusCode': 200,
-            'headers': { 
-                "access-control-allow-origin" : '*',
-                "content-type": "application/pdf" 
-            },
-            'body': base64.b64encode( f.read()).decode('utf-8') 
+            "location": "https://https://s3-ap-northeast-1.amazonaws.com/grrow.in/example.pdf"
         }
     ## ここはちゃんと動作する？要確認
     haru.close()
