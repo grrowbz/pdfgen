@@ -85,18 +85,18 @@ def lambda_handler(event, context):
     form.createObject().save('/tmp/example.pdf')
 
     s3 = boto3.resource('s3')
-    bucket = s3.resource("grrow.in")
+    bucket = s3.Bucket('grrow.in')
 
     with open('/tmp/example.pdf', 'r') as f:
 
-        bucket.put(
-            body = f.read().encode('utf-8')
-            ContentEncoding='utf-8',
+        bucket.put_object(
+            Body = f.read(),
+            Key = "hogehoge.pdf",
             ContentType='application/pdf'
         )
 
         return {
-            "location": "https://https://s3-ap-northeast-1.amazonaws.com/grrow.in/example.pdf"
+            "location": "https://https://s3-ap-northeast-1.amazonaws.com/grrow.in/hogehoge.pdf"
         }
     ## ここはちゃんと動作する？要確認
     haru.close()
