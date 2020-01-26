@@ -6,8 +6,8 @@
 #
 
 import os, sys
-from app import basic_form 
-from app import libharu
+from basic_form import *
+from libharu import *
 from ctypes import *
 
 class EstimateForm(BasicForm):
