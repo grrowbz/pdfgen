@@ -6,9 +6,9 @@
 #
 
 import os, sys
-from basic_form import * 
-from ctypes import *
+from basic_form import *
 from libharu import *
+from ctypes import *
 
 class EstimateForm(BasicForm):
 

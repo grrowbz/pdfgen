@@ -1,0 +1,10 @@
+version: '3'
+services:
+  compile-lambda:
+    build: .
+    volumes:
+      - ../app:/work/build/app
+      - ../lib:/work/build/lib
+    command: > 
+     /bin/bash -c 'cp -r  /work/app/haru/ ./app &&
+     cp /usr/lib64/libpng15.so.15 ./lib'

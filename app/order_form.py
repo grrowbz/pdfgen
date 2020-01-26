@@ -7,7 +7,7 @@
 
 import os, sys
 from ctypes import *
-from libharu import *
+from app.libharu import *
 
 def main():
 

@@ -6,9 +6,9 @@
 #
 
 import os, sys
-from basic_form import *
+from app import basic_form 
+from app import libharu 
 from ctypes import *
-from libharu import *
 
 class PurchaseOrderForm(BasicForm):
 

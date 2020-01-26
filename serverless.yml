@@ -1,0 +1,127 @@
+service: pytemp
+
+provider:
+  name: aws
+  runtime: python2.7
+
+  stage: ${opt:stage, self:custom.defaultStage}
+  profile: ${opt:profile, self:custom.defaultProfile}
+  region: ap-northeast-1
+
+  iamRoleStatements:
+    - Effect: "Allow"
+      Action:
+        - "s3:Put*"
+      Resource:
+        Fn::Join:
+          - ""
+          - - "arn:aws:s3:::${self:custom.bucketName}/*"
+  environment:
+    'bucketName': '${self:custom.bucketName}'
+
+custom:
+  defaultStage: dev
+  defaultProfile: default
+  bucketName: grrow.space
+
+  pythonRequirements:
+    slim: true
+    zip: true
+
+  prune:
+    automatic: true
+    number: 3
+
+### Lambda 関数定義（API Gateway）
+functions:
+  invoice:
+    handler: app/invoice_handler.lambda_handler
+    events:
+      - http:
+          path: /invoice
+          method: post
+          cors:
+            origin: '*'
+            headers:
+              - Content-Type
+          integration: lambda
+          request:
+            passThrough: WHEN_NO_MATCH
+            template:
+              text/xhtml: '{ "stage" : "$context.stage" }'
+          response:
+            passThrough: NEVER
+            headers:
+              Content-Type: integration.response.body.Content-Type
+              Location: integration.response.body.Location
+            statusCodes:
+              303:
+                pattern: ".*"
+  estimate:
+    handler: app/estimate_handler.lambda_handler
+    events:
+      - http:
+          path: /estimate
+          method: post
+          cors:
+            origin: '*'
+            headers:
+              - Content-Type
+          integration: lambda
+          request:
+            passThrough: WHEN_NO_MATCH
+            template:
+              text/xhtml: '{ "stage" : "$context.stage" }'
+          response:
+            passThrough: NEVER
+            headers:
+              Content-Type: integration.response.body.Content-Type
+              Location: integration.response.body.Location
+            statusCodes:
+              303:
+                pattern: ".*"
+
+### S3バケットの定義
+resources:
+  Resources:
+    placePdfBucket:
+      Type: AWS::S3::Bucket
+      DeletionPolicy: Retain
+      UpdateReplacePolicy: Retain
+      Properties:
+        BucketName: ${self:custom.bucketName}
+    GatewayResponseInvalidApiKey:
+      Type: 'AWS::ApiGateway::GatewayResponse'
+      Properties:
+        RestApiId: 
+          Ref: 'ApiGatewayRestApi'
+        ResponseType: INVALID_API_KEY
+        ResponseTemplates:
+          application/json: "{\"error\":{\"code\":\"custom-403-invalid-api-key\",\"message\":$context.error.messageString},\"requestId\":\"$context.requestId\"}"
+
+plugins:
+  - serverless-prune-plugin
+  - serverless-python-requirements
+  - serverless-offline-python
+
+package:
+  include:
+    - app/*
+    - lib/*
+    - fonts/**
+  exclude:
+    - .python-version
+    - app/*.pyc
+    - app/haru/*.pyc
+    - node_modules/**
+    - package.json
+    - package-lock.json
+    - requirements.txt
+    - tmp/**
+    - tools/**
+
+Outputs:
+  RdsLogs:
+    Description: "Bucket for Pdf"
+    Value:
+      Ref: "placePdfBucket"
